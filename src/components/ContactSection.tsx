@@ -123,7 +123,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedTier }) 
 
               {/* Instagram DM Direct Connect */}
               <a
-                href="https://www.instagram.com/yuvraj.acharya"
+                href="https://www.instagram.com/yuvraj_acharya21?utm_source=ig_web_button_share_sheet&obrf=ZDNlZDc0MzIxNw=="
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor="↗ INSTAGRAM DM"
@@ -139,7 +139,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedTier }) 
                 <div className="text-left">
                   <div className="font-mono text-[10px] text-rose-300 uppercase font-semibold">Direct Message</div>
                   <div className="font-sans font-bold text-sm text-ivory group-hover:text-rose-200 transition-colors">
-                    @yuvraj.acharya ↗
+                    @yuvraj_acharya21 ↗
                   </div>
                 </div>
               </a>
