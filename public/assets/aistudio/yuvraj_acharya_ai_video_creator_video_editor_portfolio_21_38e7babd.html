@@ -1,0 +1,2848 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yuvraj Acharya — AI Video Creator & Video Editor | Portfolio</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Great Vibes, Syne, Plus Jakarta Sans, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            script: ['"Great Vibes"', 'cursive'],
+            display: ['"Syne"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            obsidian: '#060609',
+            panel: '#0c0c14',
+            violetNeon: '#8B5CF6',
+            roseNeon: '#EC4899',
+            cyanNeon: '#06B6D4',
+            limeNeon: '#D4FF00',
+            ivory: '#FAF7F2',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg-void: #050508;
+      --bg-surface: #0b0b12;
+      --accent-violet: #8b5cf6;
+      --accent-rose: #ec4899;
+      --accent-cyan: #06b6d4;
+      --accent-lime: #d4ff00;
+      --text-ivory: #faf7f2;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background-color: var(--bg-void);
+      color: var(--text-ivory);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: auto;
+    }
+
+    body {
+      background-color: var(--bg-void);
+      overflow-x: hidden;
+      selection-background-color: #8b5cf6;
+      min-height: 100vh;
+    }
+
+    /* Hide native cursor on desktop with fine pointer */
+    @media (pointer: fine) {
+      body, a, button, input, textarea, [role="button"], .interactive-target {
+        cursor: none !important;
+      }
+    }
+
+    ::selection {
+      background: rgba(139, 92, 246, 0.35);
+      color: #faf7f2;
+    }
+
+    /* Subtle Film Grain Overlay */
+    .film-grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9990;
+      opacity: 0.032;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Ambient Background Mesh */
+    .ambient-orb {
+      position: fixed;
+      border-radius: 9999px;
+      filter: blur(130px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.25;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Hero Great Vibes Shimmer Title */
+    .hero-script-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(76px, 15vw, 176px);
+      line-height: 1.04;
+      font-weight: 400;
+      background: linear-gradient(
+        115deg,
+        #FAF7F2 0%,
+        #F3E8FF 22%,
+        #C4B5FD 45%,
+        #F9A8D4 65%,
+        #FAF7F2 82%,
+        #A78BFA 100%
+      );
+      background-size: 220% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: scriptShimmer 8s ease-in-out infinite, heroTitleEntrance 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      filter: drop-shadow(0 14px 42px rgba(139, 92, 246, 0.28));
+      padding: 0.08em 0.15em;
+    }
+
+    @keyframes scriptShimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes heroTitleEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(36px) scale(0.94) rotate(-1.5deg);
+        filter: blur(12px) drop-shadow(0 0 0 rgba(139,92,246,0));
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+        filter: blur(0px) drop-shadow(0 14px 42px rgba(139, 92, 246, 0.28));
+      }
+    }
+
+    /* Heavy 3D Page-to-Page Scroll Section Wrapper */
+    .scroll-stage {
+      perspective: 1400px;
+      transform-style: preserve-3d;
+    }
+
+    .cinema-page-section {
+      will-change: transform, opacity, filter;
+      transform-origin: center top;
+      transform-style: preserve-3d;
+      transition: box-shadow 0.4s ease;
+    }
+
+    .cinema-page-card {
+      position: relative;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(16, 16, 26, 0.82) 0%, rgba(9, 9, 15, 0.92) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow:
+        0 30px 90px -20px rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(139, 92, 246, 0.08) inset,
+        0 1px 0 0 rgba(255, 255, 255, 0.12) inset;
+      backdrop-filter: blur(20px);
+    }
+
+    /* Custom Director's Viewfinder Cursor */
+    #cursor-root {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10000;
+      overflow: hidden;
+    }
+
+    @media (pointer: coarse) {
+      #cursor-root {
+        display: none !important;
+      }
+    }
+
+    .cursor-dot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      margin-left: -4px;
+      margin-top: -4px;
+      border-radius: 50%;
+      background: #FAF7F2;
+      box-shadow: 0 0 12px #8B5CF6, 0 0 24px #EC4899;
+      pointer-events: none;
+      z-index: 10003;
+      transition: transform 0.15s ease, background-color 0.2s ease;
+    }
+
+    .cursor-ghost {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 48px;
+      height: 48px;
+      margin-left: -24px;
+      margin-top: -24px;
+      border-radius: 50%;
+      border: 1px dashed rgba(139, 92, 246, 0.38);
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0) 70%);
+      pointer-events: none;
+      z-index: 10001;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  margin 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.25s ease,
+                  background 0.25s ease;
+    }
+
+    .cursor-reticle {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 38px;
+      height: 38px;
+      margin-left: -19px;
+      margin-top: -19px;
+      pointer-events: none;
+      z-index: 10002;
+      transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                  height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                  margin 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reticle-corner {
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border-color: #FAF7F2;
+      transition: border-color 0.2s ease, transform 0.25s ease;
+    }
+    .reticle-tl { top: 0; left: 0; border-top: 2px solid; border-left: 2px solid; }
+    .reticle-tr { top: 0; right: 0; border-top: 2px solid; border-right: 2px solid; }
+    .reticle-bl { bottom: 0; left: 0; border-bottom: 2px solid; border-left: 2px solid; }
+    .reticle-br { bottom: 0; right: 0; border-bottom: 2px solid; border-right: 2px solid; }
+
+    .cursor-hud {
+      position: fixed;
+      top: 0;
+      left: 0;
+      transform: translate(24px, 18px);
+      pointer-events: none;
+      z-index: 10004;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(6, 6, 12, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(8px);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: #E2E8F0;
+      white-space: nowrap;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cursor-action-pill {
+      position: fixed;
+      top: 0;
+      left: 0;
+      transform: translate(-50%, -50%) scale(0.6);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10005;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.95), rgba(236, 72, 153, 0.95));
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      transition: opacity 0.22s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+    }
+
+    /* Cursor Active Hover States */
+    #cursor-root.cursor-hover .cursor-reticle {
+      width: 66px;
+      height: 66px;
+      margin-left: -33px;
+      margin-top: -33px;
+      transform: rotate(90deg);
+    }
+    #cursor-root.cursor-hover .reticle-corner {
+      border-color: #D4FF00;
+    }
+    #cursor-root.cursor-hover .cursor-ghost {
+      width: 82px;
+      height: 82px;
+      margin-left: -41px;
+      margin-top: -41px;
+      border-color: rgba(212, 255, 0, 0.55);
+      background: radial-gradient(circle, rgba(212, 255, 0, 0.14) 0%, rgba(139, 92, 246, 0.05) 70%);
+    }
+    #cursor-root.cursor-hover .cursor-action-pill {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    #cursor-root.cursor-hover .cursor-hud {
+      transform: translate(42px, 34px);
+      border-color: rgba(212, 255, 0, 0.45);
+    }
+
+    /* Creative Worked With Giant Camera Brackets */
+    .bracket-showcase-frame {
+      position: relative;
+      padding: 2.5rem 1.75rem;
+      border-radius: 28px;
+      background:
+        radial-gradient(900px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(139, 92, 246, 0.13), transparent 45%),
+        linear-gradient(180deg, rgba(15, 15, 26, 0.9) 0%, rgba(8, 8, 14, 0.95) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .bracket-showcase-frame {
+        padding: 3.5rem 3rem;
+      }
+    }
+
+    /* Oversized Architectural / Viewfinder Corner Brackets [ ] */
+    .mega-bracket {
+      position: absolute;
+      width: 52px;
+      height: 52px;
+      pointer-events: none;
+      z-index: 10;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bracket-showcase-frame:hover .mega-bracket {
+      width: 64px;
+      height: 64px;
+      filter: drop-shadow(0 0 14px rgba(139, 92, 246, 0.8));
+    }
+    .mega-bracket-tl {
+      top: 14px;
+      left: 14px;
+      border-top: 3px solid #8B5CF6;
+      border-left: 3px solid #8B5CF6;
+      border-top-left-radius: 14px;
+    }
+    .mega-bracket-tr {
+      top: 14px;
+      right: 14px;
+      border-top: 3px solid #EC4899;
+      border-right: 3px solid #EC4899;
+      border-top-right-radius: 14px;
+    }
+    .mega-bracket-bl {
+      bottom: 14px;
+      left: 14px;
+      border-bottom: 3px solid #06B6D4;
+      border-left: 3px solid #06B6D4;
+      border-bottom-left-radius: 14px;
+    }
+    .mega-bracket-br {
+      bottom: 14px;
+      right: 14px;
+      border-bottom: 3px solid #D4FF00;
+      border-right: 3px solid #D4FF00;
+      border-bottom-right-radius: 14px;
+    }
+
+    /* Laser scanline along bracket border */
+    .laser-line-top {
+      position: absolute;
+      top: 0;
+      left: -30%;
+      width: 35%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #8B5CF6, #EC4899, #D4FF00, transparent);
+      animation: laserSweep 6s linear infinite;
+    }
+    .laser-line-bottom {
+      position: absolute;
+      bottom: 0;
+      right: -30%;
+      width: 35%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #06B6D4, #8B5CF6, transparent);
+      animation: laserSweepReverse 6s linear infinite;
+    }
+
+    @keyframes laserSweep {
+      0% { left: -35%; }
+      100% { left: 105%; }
+    }
+    @keyframes laserSweepReverse {
+      0% { right: -35%; }
+      100% { right: 105%; }
+    }
+
+    /* 3D Brand Tilt Card */
+    .brand-tilt-card {
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.2s ease-out, border-color 0.3s ease, box-shadow 0.3s ease;
+      background: linear-gradient(155deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      overflow: hidden;
+    }
+    .brand-tilt-card:hover {
+      border-color: rgba(139, 92, 246, 0.5);
+      box-shadow: 0 20px 50px -12px rgba(139, 92, 246, 0.28);
+    }
+    .brand-card-spotlight {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(320px circle at var(--card-x, 50%) var(--card-y, 50%), rgba(139, 92, 246, 0.22), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .brand-tilt-card:hover .brand-card-spotlight {
+      opacity: 1;
+    }
+
+    /* Infinite Dual Marquee Tickers */
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marqueeScroll 28s linear infinite;
+    }
+    .marquee-track-reverse {
+      display: flex;
+      width: max-content;
+      animation: marqueeScrollReverse 32s linear infinite;
+    }
+    .marquee-track:hover, .marquee-track-reverse:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    @keyframes marqueeScrollReverse {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(0); }
+    }
+
+    /* Tool Pill Authentic Vector Badge Styling */
+    .tool-pill {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(24, 24, 38, 0.85), rgba(12, 12, 20, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .tool-pill::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(240px circle at 20% 50%, var(--tool-glow, rgba(139, 92, 246, 0.22)), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+    .tool-pill:hover {
+      transform: translateY(-5px) scale(1.02);
+      border-color: var(--tool-border, rgba(139, 92, 246, 0.55));
+      box-shadow: 0 18px 40px -12px var(--tool-shadow, rgba(139, 92, 246, 0.3));
+    }
+    .tool-pill:hover::before {
+      opacity: 1;
+    }
+    .tool-icon-wrap {
+      width: 52px;
+      height: 52px;
+      flex-shrink: 0;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tool-pill:hover .tool-icon-wrap {
+      transform: scale(1.09) rotate(-3deg);
+    }
+
+    /* ElevenLabs animated wave bars on hover */
+    .eleven-bar-1, .eleven-bar-2 {
+      transform-origin: center;
+      transition: transform 0.3s ease;
+    }
+    .tool-pill:hover .eleven-bar-1 {
+      animation: elevenPulse 0.7s ease-in-out infinite alternate;
+    }
+    .tool-pill:hover .eleven-bar-2 {
+      animation: elevenPulse 0.7s ease-in-out 0.35s infinite alternate;
+    }
+    @keyframes elevenPulse {
+      0% { transform: scaleY(0.72); }
+      100% { transform: scaleY(1.18); }
+    }
+
+    /* Claude Starburst subtle spin on hover */
+    .claude-star {
+      transform-origin: center;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tool-pill:hover .claude-star {
+      transform: rotate(45deg) scale(1.08);
+    }
+
+    /* DaVinci Resolve color wheel spin on hover */
+    .resolve-wheel {
+      transform-origin: center;
+      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tool-pill:hover .resolve-wheel {
+      transform: rotate(120deg);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #050508;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #232336;
+      border-radius: 999px;
+      border: 2px solid #050508;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8B5CF6;
+    }
+  </style>
+</head>
+
+<body class="antialiased selection:bg-violetNeon/30 selection:text-ivory">
+
+  <!-- Subtle Film Grain Overlay -->
+  <div class="film-grain"></div>
+
+  <!-- Ambient Cinema Glow Orbs -->
+  <div id="orb-1" class="ambient-orb w-[520px] h-[520px] bg-violet-600/30 -top-32 -left-32"></div>
+  <div id="orb-2" class="ambient-orb w-[460px] h-[460px] bg-pink-600/20 top-1/3 -right-32"></div>
+  <div id="orb-3" class="ambient-orb w-[500px] h-[500px] bg-cyan-500/20 bottom-0 left-1/4"></div>
+
+  <!-- Top Neon Scroll Progress Bar -->
+  <div class="fixed top-0 left-0 right-0 h-[3px] z-[9995] bg-white/5">
+    <div id="scroll-progress-bar" class="h-full w-0 bg-gradient-to-r from-violetNeon via-roseNeon to-limeNeon shadow-[0_0_16px_#8B5CF6]"></div>
+  </div>
+
+  <!-- =====================================================================
+       ULTRA-CREATIVE CUSTOM CURSOR (DIRECTOR'S VIEWFINDER + LIVE TIMECODE HUD)
+       ===================================================================== -->
+  <div id="cursor-root" aria-hidden="true">
+    <!-- Trailing Motion-Blur Ghost Ring -->
+    <div id="cursor-ghost" class="cursor-ghost"></div>
+
+    <!-- 4 Corner Viewfinder Reticle Brackets -->
+    <div id="cursor-reticle" class="cursor-reticle">
+      <span class="reticle-corner reticle-tl"></span>
+      <span class="reticle-corner reticle-tr"></span>
+      <span class="reticle-corner reticle-bl"></span>
+      <span class="reticle-corner reticle-br"></span>
+    </div>
+
+    <!-- Central Precision Crosshair Dot -->
+    <div id="cursor-dot" class="cursor-dot"></div>
+
+    <!-- Magnetic Action Pill on Hover -->
+    <div id="cursor-action-pill" class="cursor-action-pill">✦ CLICK</div>
+
+    <!-- Floating Mini HUD Badge (REC + 24fps Live Timecode) -->
+    <div id="cursor-hud" class="cursor-hud">
+      <span class="inline-block w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_#ef4444]"></span>
+      <span class="text-red-400 font-bold">REC</span>
+      <span id="cursor-timecode" class="text-ivory/90 tabular-nums">00:00:12:08</span>
+      <span id="cursor-fps-badge" class="text-[9px] text-limeNeon/90 px-1 py-0.2 bg-white/5 rounded">24FPS</span>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       FLOATING RIGHT-SIDE SECTION TELEMETRY INDICATOR
+       ===================================================================== -->
+  <aside class="fixed right-5 top-1/2 -translate-y-1/2 z-50 hidden xl:flex flex-col items-end gap-3">
+    <div class="px-2.5 py-1 rounded-md bg-black/70 border border-white/10 font-mono text-[10px] text-white/50 tracking-widest uppercase mb-1">
+      <span id="active-section-code">SCN 01 // HERO</span>
+    </div>
+    <nav class="flex flex-col gap-2.5 bg-panel/80 backdrop-blur-md border border-white/10 p-2 rounded-full">
+      <a href="#hero" data-cursor="↗ HERO" data-section-dot="hero" class="section-dot w-2.5 h-2.5 rounded-full bg-violetNeon transition-all duration-300 shadow-[0_0_10px_#8B5CF6]" title="01. Hero"></a>
+      <a href="#brands" data-cursor="↗ BRANDS" data-section-dot="brands" class="section-dot w-2.5 h-2.5 rounded-full bg-white/20 hover:bg-white/60 transition-all duration-300" title="02. Worked With"></a>
+      <a href="#work" data-cursor="↗ REELS" data-section-dot="work" class="section-dot w-2.5 h-2.5 rounded-full bg-white/20 hover:bg-white/60 transition-all duration-300" title="03. Selected Work"></a>
+      <a href="#services" data-cursor="↗ SERVICES" data-section-dot="services" class="section-dot w-2.5 h-2.5 rounded-full bg-white/20 hover:bg-white/60 transition-all duration-300" title="04. Services"></a>
+      <a href="#tools" data-cursor="↗ TOOLS" data-section-dot="tools" class="section-dot w-2.5 h-2.5 rounded-full bg-white/20 hover:bg-white/60 transition-all duration-300" title="05. Tools & AI Stack"></a>
+      <a href="#contact" data-cursor="↗ CONTACT" data-section-dot="contact" class="section-dot w-2.5 h-2.5 rounded-full bg-white/20 hover:bg-white/60 transition-all duration-300" title="06. Contact"></a>
+    </nav>
+  </aside>
+
+  <!-- =====================================================================
+       TOP NAVBAR — RENAMED TO "Portfolio" WITH GLOWING STATUS DOT
+       ===================================================================== -->
+  <header class="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 pt-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between px-5 py-3.5 rounded-2xl bg-obsidian/75 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.6)]">
+      <!-- Top-Left Brand: Renamed to "Portfolio" -->
+      <a href="#hero" data-cursor="✦ HOME" class="group flex items-center gap-3">
+        <span class="font-mono text-xs text-violetNeon/80 group-hover:translate-x-[-2px] transition-transform">[</span>
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-limeNeon opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-limeNeon shadow-[0_0_10px_#D4FF00]"></span>
+        </span>
+        <span class="font-display font-bold text-lg sm:text-xl tracking-tight text-ivory group-hover:text-violet-300 transition-colors">
+          Portfolio
+        </span>
+        <span class="font-mono text-xs text-violetNeon/80 group-hover:translate-x-[2px] transition-transform">]</span>
+        <span class="hidden sm:inline-block font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 text-white/50 border border-white/10">
+          v2.6 STUDIO
+        </span>
+      </a>
+
+      <!-- Center Navigation Links -->
+      <nav class="hidden md:flex items-center gap-1 lg:gap-2 font-sans text-sm text-white/70">
+        <a href="#brands" data-cursor="↗ BRANDS" class="px-3.5 py-1.5 rounded-lg hover:text-ivory hover:bg-white/5 transition-all">Brands</a>
+        <a href="#work" data-cursor="▶ WORK" class="px-3.5 py-1.5 rounded-lg hover:text-ivory hover:bg-white/5 transition-all">Selected Work</a>
+        <a href="#services" data-cursor="↗ SERVICES" class="px-3.5 py-1.5 rounded-lg hover:text-ivory hover:bg-white/5 transition-all">Services</a>
+        <a href="#tools" data-cursor="↗ AI & TOOLS" class="px-3.5 py-1.5 rounded-lg hover:text-ivory hover:bg-white/5 transition-all">Tools & AI</a>
+        <a href="#contact" data-cursor="↗ CONTACT" class="px-3.5 py-1.5 rounded-lg hover:text-ivory hover:bg-white/5 transition-all">Contact</a>
+      </nav>
+
+      <!-- Right Action Controls -->
+      <div class="flex items-center gap-2.5">
+        <!-- 3D Motion Mode Toggle -->
+        <button id="toggle-3d-btn" data-cursor="✦ 3D MOTION" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 font-mono text-[11px] text-white/80 transition-all" title="Toggle Heavy 3D Page Scroll Effect">
+          <span id="toggle-3d-dot" class="w-2 h-2 rounded-full bg-violetNeon shadow-[0_0_8px_#8B5CF6]"></span>
+          <span>3D SCROLL: <strong id="toggle-3d-label" class="text-limeNeon">ON</strong></span>
+        </button>
+
+        <a href="#contact" data-cursor="✦ BOOK CALL" class="relative inline-flex items-center gap-2 px-4 py-2 rounded-xl font-sans font-semibold text-xs sm:text-sm text-obsidian bg-gradient-to-r from-ivory via-violet-200 to-limeNeon hover:brightness-110 transition-all shadow-[0_0_25px_rgba(139,92,246,0.35)]">
+          <span>Let's Create</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7V16"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       MAIN 3D STAGE CONTAINER (HEAVY PAGE-TO-PAGE SCROLL MOTION)
+       ===================================================================== -->
+  <main id="scroll-stage" class="scroll-stage relative z-10 pt-28 pb-24 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto space-y-16 sm:space-y-24">
+
+    <!-- ===================================================================
+         SECTION 01: HERO (WITH 'GREAT VIBES' EXPRESSIVE TYPOGRAPHY)
+         =================================================================== -->
+    <section id="hero" data-section-name="SCN 01 // HERO" class="cinema-page-section min-h-[85vh] flex flex-col justify-center">
+      <div class="cinema-page-card p-6 sm:p-12 lg:p-16 relative overflow-hidden">
+
+        <!-- Subtle Viewfinder Telemetry Header -->
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-white/10 font-mono text-xs text-white/50">
+          <div class="flex items-center gap-3">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-[11px]">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+              AVAILABLE FOR NEW PROJECTS
+            </span>
+            <span class="hidden sm:inline text-white/30">|</span>
+            <span class="hidden sm:inline">INDIA • WORLDWIDE REMOTE</span>
+          </div>
+          <div class="flex items-center gap-4 text-[11px]">
+            <span class="text-violet-300">RES: 4K DCI</span>
+            <span>COLOR: ACEScct</span>
+            <span id="hero-live-clock" class="text-limeNeon">TC 01:00:00:00</span>
+          </div>
+        </div>
+
+        <!-- Centerpiece Hero Content -->
+        <div class="py-10 sm:py-14 text-center relative">
+          <!-- Role Pill Above Name -->
+          <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-violetNeon/10 border border-violetNeon/30 mb-5">
+            <span class="font-mono text-xs uppercase tracking-[0.2em] text-violet-300 font-semibold">
+              AI Video Creator &amp; Senior Video Editor
+            </span>
+          </div>
+
+          <!-- MAIN HERO TITLE IN GOOGLE FONT 'GREAT VIBES' -->
+          <h1 class="hero-script-title select-none mx-auto" data-cursor="✦ YUVRAJ ACHARYA">
+            Yuvraj Acharya
+          </h1>
+
+          <!-- Subtitle & Value Proposition -->
+          <p class="max-w-2xl mx-auto mt-4 sm:mt-6 text-base sm:text-xl text-white/75 font-normal leading-relaxed">
+            Crafting <span class="text-ivory font-semibold underline decoration-violetNeon/60 decoration-2 underline-offset-4">hyper-retention commercial edits</span>, cinematic generative AI commercials, and scroll-stopping motion reels for high-growth D2C brands &amp; global creators.
+          </p>
+
+          <!-- Primary Hero CTAs -->
+          <div class="mt-9 flex flex-wrap items-center justify-center gap-4">
+            <a href="#work" data-cursor="▶ WATCH REELS" class="group relative inline-flex items-center gap-3 px-7 py-4 rounded-2xl bg-gradient-to-r from-violetNeon via-fuchsia-500 to-roseNeon text-white font-display font-bold text-sm sm:text-base tracking-wide shadow-[0_14px_40px_rgba(139,92,246,0.45)] hover:scale-[1.03] transition-all">
+              <span class="w-7 h-7 rounded-full bg-black/30 flex items-center justify-center">
+                <svg class="w-3.5 h-3.5 translate-x-0.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </span>
+              <span>Explore Showreel &amp; Edits</span>
+            </a>
+
+            <a href="#tools" data-cursor="↗ AI PIPELINE" class="inline-flex items-center gap-2.5 px-6 py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 text-ivory font-sans font-semibold text-sm sm:text-base transition-all">
+              <span>View AI &amp; Editing Stack</span>
+              <span class="font-mono text-xs text-limeNeon">[8 TOOLS]</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Bottom Hero Metrics Bar -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-8 border-t border-white/10">
+          <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5 text-center sm:text-left">
+            <div class="font-mono text-xs text-white/45 uppercase tracking-wider">Organic &amp; Paid Views</div>
+            <div class="font-display font-extrabold text-2xl sm:text-3xl text-ivory mt-1">50M<span class="text-violetNeon">+</span></div>
+            <div class="font-mono text-[11px] text-emerald-400 mt-0.5">Across Reels, Shorts &amp; Meta Ads</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5 text-center sm:text-left">
+            <div class="font-mono text-xs text-white/45 uppercase tracking-wider">Projects Shipped</div>
+            <div class="font-display font-extrabold text-2xl sm:text-3xl text-ivory mt-1">150<span class="text-roseNeon">+</span></div>
+            <div class="font-mono text-[11px] text-white/50 mt-0.5">Commercials, UGC &amp; AI Films</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5 text-center sm:text-left">
+            <div class="font-mono text-xs text-white/45 uppercase tracking-wider">Hook Retention Lift</div>
+            <div class="font-display font-extrabold text-2xl sm:text-3xl text-ivory mt-1">3.4<span class="text-limeNeon">x</span></div>
+            <div class="font-mono text-[11px] text-white/50 mt-0.5">First 3-Second Thumbstop Rate</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5 text-center sm:text-left">
+            <div class="font-mono text-xs text-white/45 uppercase tracking-wider">Avg Turnaround</div>
+            <div class="font-display font-extrabold text-2xl sm:text-3xl text-ivory mt-1">24–48<span class="text-cyanNeon">h</span></div>
+            <div class="font-mono text-[11px] text-white/50 mt-0.5">AI-Accelerated Studio Pipeline</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SECTION 02: CREATIVE "WORKED WITH" BRANDS BRACKET AREA
+         =================================================================== -->
+    <section id="brands" data-section-name="SCN 02 // BRANDS" class="cinema-page-section">
+      <div id="bracket-showcase" class="bracket-showcase-frame shadow-2xl">
+        <!-- Animated Laser Scanlines -->
+        <div class="laser-line-top"></div>
+        <div class="laser-line-bottom"></div>
+
+        <!-- Giant Architectural / Camera Viewfinder Corner Brackets [ ] -->
+        <div class="mega-bracket mega-bracket-tl"></div>
+        <div class="mega-bracket mega-bracket-tr"></div>
+        <div class="mega-bracket mega-bracket-bl"></div>
+        <div class="mega-bracket mega-bracket-br"></div>
+
+        <!-- Camera Telemetry Corner Labels -->
+        <div class="hidden sm:flex justify-between items-center font-mono text-[10px] text-white/40 tracking-widest uppercase mb-6 px-3">
+          <span>[ FRAME_REF: BRAND_ROSTER_2026 ]</span>
+          <span class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-violetNeon"></span>
+            VERIFIED COMMERCIAL PARTNERSHIPS
+          </span>
+        </div>
+
+        <!-- Bracketed Section Header Badge -->
+        <div class="text-center max-w-3xl mx-auto mb-10">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-violetNeon/40 font-mono text-xs text-limeNeon tracking-widest uppercase shadow-[0_0_24px_rgba(139,92,246,0.25)]">
+            <span>[ TRUSTED BY BRANDS &amp; AGENCIES ]</span>
+          </div>
+          <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-ivory mt-4 tracking-tight">
+            Worked With Industry Leaders
+          </h2>
+          <p class="text-white/60 text-sm sm:text-base mt-2.5">
+            Delivering high-converting AI video commercials, motion graphics, and performance edits inside a precision production frame.
+          </p>
+        </div>
+
+        <!-- Interactive 3D-Tilt Brand Cards inside the Giant Brackets -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 relative z-10">
+
+          <!-- Brand Card 1: The Derma Co -->
+          <div class="brand-tilt-card rounded-2xl p-6 flex flex-col justify-between min-h-[250px]" data-cursor="✦ THE DERMA CO">
+            <div class="brand-card-spotlight"></div>
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-5">
+                <!-- Custom SVG Emblem for The Derma Co -->
+                <div class="w-13 h-13 rounded-xl bg-gradient-to-br from-cyan-500/20 to-violet-600/20 border border-cyan-400/30 flex items-center justify-center p-2.5 shadow-inner">
+                  <svg class="w-8 h-8" viewBox="0 0 48 48" fill="none">
+                    <rect x="4" y="4" width="40" height="40" rx="10" stroke="#06B6D4" stroke-width="2.2"/>
+                    <path d="M15 15H24C30.075 15 35 19.925 35 26C35 32.075 30.075 37 24 37H15V15Z" stroke="#FAF7F2" stroke-width="2.8"/>
+                    <circle cx="24" cy="26" r="4.5" fill="#06B6D4"/>
+                    <path d="M24 10V13M38 26H41" stroke="#D4FF00" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <span class="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-400/30">
+                  AI Video Ads
+                </span>
+              </div>
+
+              <h3 class="font-display font-bold text-xl text-ivory tracking-tight">The Derma Co</h3>
+              <p class="text-white/60 text-xs sm:text-sm mt-2 leading-relaxed">
+                Hyper-realistic AI product visualizers, clinical ingredient motion graphics &amp; high-ROAS reels.
+              </p>
+            </div>
+
+            <div class="pt-4 mt-5 border-t border-white/10 flex items-center justify-between font-mono text-[11px] text-white/50">
+              <span>D2C SKINCARE</span>
+              <span class="text-cyan-300 font-semibold">● DELIVERED</span>
+            </div>
+          </div>
+
+          <!-- Brand Card 2: Lumera -->
+          <div class="brand-tilt-card rounded-2xl p-6 flex flex-col justify-between min-h-[250px]" data-cursor="✦ LUMERA">
+            <div class="brand-card-spotlight"></div>
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-5">
+                <!-- Custom SVG Emblem for Lumera -->
+                <div class="w-13 h-13 rounded-xl bg-gradient-to-br from-fuchsia-500/20 to-amber-500/20 border border-fuchsia-400/30 flex items-center justify-center p-2.5 shadow-inner">
+                  <svg class="w-8 h-8" viewBox="0 0 48 48" fill="none">
+                    <circle cx="24" cy="24" r="19" stroke="#EC4899" stroke-width="2"/>
+                    <path d="M24 8L28.5 19.5L40 24L28.5 28.5L24 40L19.5 28.5L8 24L19.5 19.5L24 8Z" stroke="#FAF7F2" stroke-width="2.2" fill="rgba(236,72,153,0.2)"/>
+                    <circle cx="24" cy="24" r="3" fill="#D4FF00"/>
+                  </svg>
+                </div>
+                <span class="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-400/30">
+                  Brand Reels
+                </span>
+              </div>
+
+              <h3 class="font-display font-bold text-xl text-ivory tracking-tight">Lumera</h3>
+              <p class="text-white/60 text-xs sm:text-sm mt-2 leading-relaxed">
+                Luxury aesthetic campaign films, generative lighting lookbooks, and editorial rhythm cuts.
+              </p>
+            </div>
+
+            <div class="pt-4 mt-5 border-t border-white/10 flex items-center justify-between font-mono text-[11px] text-white/50">
+              <span>LUXURY LIFESTYLE</span>
+              <span class="text-fuchsia-300 font-semibold">● DELIVERED</span>
+            </div>
+          </div>
+
+          <!-- Brand Card 3: Backdrop India -->
+          <div class="brand-tilt-card rounded-2xl p-6 flex flex-col justify-between min-h-[250px]" data-cursor="✦ BACKDROP INDIA">
+            <div class="brand-card-spotlight"></div>
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-5">
+                <!-- Custom SVG Emblem for Backdrop India -->
+                <div class="w-13 h-13 rounded-xl bg-gradient-to-br from-violet-500/20 to-indigo-600/20 border border-violet-400/30 flex items-center justify-center p-2.5 shadow-inner">
+                  <svg class="w-8 h-8" viewBox="0 0 48 48" fill="none">
+                    <rect x="7" y="10" width="26" height="26" rx="5" stroke="#8B5CF6" stroke-width="2.2"/>
+                    <rect x="15" y="14" width="26" height="26" rx="5" fill="#0B0B14" stroke="#FAF7F2" stroke-width="2.2"/>
+                    <path d="M21 27L26 22L35 31" stroke="#D4FF00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="24" cy="21" r="2.2" fill="#8B5CF6"/>
+                  </svg>
+                </div>
+                <span class="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-violet-500/15 text-violet-300 border border-violet-400/30">
+                  Commercial Edits
+                </span>
+              </div>
+
+              <h3 class="font-display font-bold text-xl text-ivory tracking-tight">Backdrop India</h3>
+              <p class="text-white/60 text-xs sm:text-sm mt-2 leading-relaxed">
+                Dynamic visual storytelling, seamless speed-ramps, sound design &amp; color-graded brand stories.
+              </p>
+            </div>
+
+            <div class="pt-4 mt-5 border-t border-white/10 flex items-center justify-between font-mono text-[11px] text-white/50">
+              <span>PRODUCTION HOUSE</span>
+              <span class="text-violet-300 font-semibold">● DELIVERED</span>
+            </div>
+          </div>
+
+          <!-- Brand Card 4: D2C Brands & Agencies -->
+          <div class="brand-tilt-card rounded-2xl p-6 flex flex-col justify-between min-h-[250px]" data-cursor="✦ D2C & AGENCIES">
+            <div class="brand-card-spotlight"></div>
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-5">
+                <!-- Custom SVG Emblem for D2C Brands & Agencies -->
+                <div class="w-13 h-13 rounded-xl bg-gradient-to-br from-lime-400/20 to-emerald-500/20 border border-lime-400/30 flex items-center justify-center p-2.5 shadow-inner">
+                  <svg class="w-8 h-8" viewBox="0 0 48 48" fill="none">
+                    <polygon points="24,6 41,15.5 41,32.5 24,42 7,32.5 7,15.5" stroke="#D4FF00" stroke-width="2.2" fill="rgba(212,255,0,0.08)"/>
+                    <path d="M17 28L23 18L28 25L33 17" stroke="#FAF7F2" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="33" cy="17" r="3" fill="#D4FF00"/>
+                  </svg>
+                </div>
+                <span class="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-lime-400/15 text-limeNeon border border-lime-400/30">
+                  Scale &amp; UGC
+                </span>
+              </div>
+
+              <h3 class="font-display font-bold text-xl text-ivory tracking-tight">D2C Brands &amp; Agencies</h3>
+              <p class="text-white/60 text-xs sm:text-sm mt-2 leading-relaxed">
+                Partnering with 15+ performance marketing agencies &amp; founders for weekly ad creatives &amp; AI hooks.
+              </p>
+            </div>
+
+            <div class="pt-4 mt-5 border-t border-white/10 flex items-center justify-between font-mono text-[11px] text-white/50">
+              <span>15+ GLOBAL CLIENTS</span>
+              <span class="text-limeNeon font-semibold">● ACTIVE RETAINERS</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Infinite Dual-Direction Film-Strip Marquee Ticker Underneath -->
+        <div class="mt-10 pt-6 border-t border-white/10 space-y-3 overflow-hidden relative">
+          <div class="marquee-track gap-4 items-center">
+            <!-- Duplicated set for seamless loop -->
+            <div class="flex items-center gap-4 pr-4 font-mono text-xs uppercase tracking-widest text-white/65">
+              <span class="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ivory">[ THE DERMA CO ]</span>
+              <span class="text-violetNeon">✦</span>
+              <span class="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ivory">[ LUMERA ]</span>
+              <span class="text-roseNeon">✦</span>
+              <span class="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ivory">[ BACKDROP INDIA ]</span>
+              <span class="text-limeNeon">✦</span>
+              <span class="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ivory">[ AI VIDEO COMMERCIALS ]</span>
+              <span class="text-cyanNeon">✦</span>
+              <span class="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ivory">[ D2C PERFORMANCE ADS ]</span>
+              <span class="text-violetNeon">✦</span>
+              <span class="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ivory">[ HIGGSFIELD + KLING VFX ]</span>
+              <span class="text-roseNeon">✦</span>
+              <span class="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ivory">[ THE DERMA CO ]</span>
+              <span class="text-violetNeon">✦</span>
+              <span class="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ivory">[ LUMERA ]</span>
+              <span class="text-roseNeon">✦</span>
+              <span class="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ivory">[ BACKDROP INDIA ]</span>
+              <span class="text-limeNeon">✦</span>
+              <span class="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ivory">[ AI VIDEO COMMERCIALS ]</span>
+              <span class="text-cyanNeon">✦</span>
+              <span class="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ivory">[ D2C PERFORMANCE ADS ]</span>
+              <span class="text-violetNeon">✦</span>
+              <span class="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ivory">[ HIGGSFIELD + KLING VFX ]</span>
+              <span class="text-roseNeon">✦</span>
+            </div>
+          </div>
+
+          <div class="marquee-track-reverse gap-4 items-center">
+            <div class="flex items-center gap-4 pr-4 font-mono text-[11px] uppercase tracking-widest text-white/45">
+              <span>🎬 24FPS CINEMA GRADE</span><span>•</span>
+              <span>⚡ HIGH-RETENTION HOOKS</span><span>•</span>
+              <span>🧠 GENERATIVE AI WORKFLOWS</span><span>•</span>
+              <span>🎧 ELEVENLABS SPATIAL SFX</span><span>•</span>
+              <span>🎨 DAVINCI  COLOR GRADING </span><span>•</span>
+              <span>✨ AFTER EFFECTS MOTION</span><span>•</span>
+              <span>🎬 24FPS CINEMA GRADE</span><span>•</span>
+              <span>⚡ HIGH-RETENTION HOOKS</span><span>•</span>
+              <span>🧠 GENERATIVE AI WORKFLOWS</span><span>•</span>
+              <span>🎧 ELEVENLABS SPATIAL SFX</span><span>•</span>
+              <span>🎨 DAVINCI ACES COLOR</span><span>•</span>
+              <span>✨ AFTER EFFECTS MOTION</span><span>•</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SECTION 03: EDITED VIDEOS WITH VIRAL HOOKS
+         =================================================================== -->
+    <section id="work" data-section-name="SCN 03 // VIRAL HOOKS" class="cinema-page-section">
+      <div class="cinema-page-card p-6 sm:p-10 lg:p-14">
+
+        <!-- Section Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-violetNeon/15 border border-violetNeon/30 font-mono text-xs text-violet-300 uppercase tracking-widest">
+              <span class="w-2 h-2 rounded-full bg-limeNeon animate-pulse"></span>
+              <span>● CLIENT WORK: VIRAL HOOKS</span>
+            </div>
+            <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-ivory mt-3 tracking-tight">
+              Edited Videos with Viral Hooks
+            </h2>
+            <p class="text-white/60 text-sm sm:text-base mt-2 max-w-2xl">
+              High-retention edits, punchy pacing, and scroll-stopping hooks designed to keep viewers watching through the entire reel.
+            </p>
+          </div>
+
+          <!-- Video Category Filter & Direct File Selector Helper -->
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="font-mono text-xs text-limeNeon px-3 py-1.5 rounded-lg bg-limeNeon/10 border border-limeNeon/30 flex items-center gap-1.5">
+              <span>●</span> 2 CLIENT REELS LOADED
+            </span>
+            <span class="font-mono text-xs text-white/50 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
+              NEXT: COMMERCIAL AI ADS
+            </span>
+          </div>
+        </div>
+
+        <!-- Video Showcase Grid: 2 High-Retention Client Reels + Upcoming Commercial AI Ads Slot -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+          <!-- ==============================================================
+               CLIENT REEL 1: Clean & Engaging Motion Hook
+               ============================================================== -->
+          <article class="lg:col-span-6 bg-obsidian/90 border border-white/10 hover:border-violetNeon/60 transition-all rounded-3xl p-5 sm:p-6 flex flex-col group shadow-[0_20px_50px_rgba(0,0,0,0.6)]" data-cursor="▶ PLAY REEL 01">
+            <!-- Header Meta -->
+            <div class="flex items-center justify-between pb-3.5 border-b border-white/10 text-xs font-mono">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-limeNeon shadow-[0_0_8px_#D4FF00]"></span>
+                <span class="text-ivory font-semibold">REEL 01 // CREATOR EDUCATION</span>
+              </div>
+              <span class="px-2 py-0.5 rounded bg-violetNeon/20 text-violet-300 border border-violetNeon/30 text-[10px]">9:16 VERTICAL • 00:45</span>
+            </div>
+
+            <!-- Video Player Frame -->
+            <div class="relative aspect-[9/16] max-h-[580px] w-full rounded-2xl overflow-hidden bg-[#080b0c] mt-4 flex items-center justify-center border border-white/10 shadow-2xl select-none" id="reel-frame-1">
+              <!-- Live Scene-by-Scene Canvas Recreation of Client Video 1 (Always visible & animated even in sandboxed preview) -->
+              <canvas id="client-canvas-1" class="absolute inset-0 w-full h-full object-cover z-0"></canvas>
+
+              <!-- Native HTML5 Video Element (Plays MP4 with sound when file is available in directory or linked) -->
+              <video
+                id="client-reel-1"
+                class=" absolute inset-0 w-full h-full object-cover z-[5] opacity-0 transition-opacity duration-300"
+                playsinline
+                loop
+                preload="auto">
+                <source src="From Klickpin.com- Modern social dialogue prompts for people who love practical beauty today to share with clarity-pin-id-958422364469848570_2.mp4" type="video/mp4">
+                <source src="From Klickpin.com- Modern social dialogue prompts for people who love practical beauty today to share with clarity-pin-id-958422364469848570.mp4" type="video/mp4">
+                <source src="viral_hook_clean_edit.mp4" type="video/mp4">
+              </video>
+
+              <!-- Viewfinder HUD Overlays -->
+              <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10 font-mono text-[10px]">
+                <span class="px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-md border border-white/15 text-cyan-300">
+                  MOTION TYPOGRAPHY
+                </span>
+                <span class="px-2.5 py-1 rounded-md bg-red-500/20 border border-red-500/40 text-red-300 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
+                  24 FPS REC
+                </span>
+              </div>
+
+              <!-- Single Clean Play / Pause Central Button (Auto-hides while playing) -->
+              <button
+                class="client-video-toggle absolute inset-0 m-auto w-16 h-16 rounded-full bg-violetNeon/90 hover:bg-violetNeon text-white flex items-center justify-center backdrop-blur-md border border-white/40 shadow-[0_0_30px_rgba(139,92,246,0.75)] z-20 opacity-0 group-hover:opacity-100 transition-all duration-300"
+                data-video-id="client-reel-1"
+                data-reel-index="0"
+                aria-label="Play or Pause Reel 1">
+                <svg class="play-icon w-6 h-6 fill-current translate-x-0.5 hidden" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <svg class="pause-icon w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+              </button>
+
+              <!-- Bottom In-Video Progress & Controls Bar -->
+              <div class="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/95 via-black/75 to-transparent z-20 flex flex-col gap-2">
+                <!-- Interactive Progress Scrubber -->
+                <div class="w-full h-1.5 bg-white/15 rounded-full overflow-hidden cursor-pointer reel-progress-track" data-reel-index="0">
+                  <div id="reel-progress-fill-1" class="h-full bg-gradient-to-r from-violetNeon to-limeNeon w-0 transition-all duration-75"></div>
+                </div>
+
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-2.5">
+                    <button class="sound-toggle-btn text-white/85 hover:text-limeNeon transition-colors" data-video-id="client-reel-1" data-reel-index="0" title="Toggle Audio">
+                      <svg class="w-4 h-4 sound-on-icon hidden fill-current" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                      <svg class="w-4 h-4 sound-off-icon fill-current" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                    </button>
+                    <span id="reel-time-1" class="video-time-label font-mono text-[10px] text-white/80 tabular-nums">00:00 / 00:45</span>
+                  </div>
+
+                  <label class="cursor-pointer font-mono text-[10px] text-limeNeon/95 hover:text-limeNeon flex items-center gap-1 px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 border border-white/20 transition-all" title="Load your local MP4 file with full audio">
+                    <span>🎬 Load MP4 + Audio</span>
+                    <input type="file" accept="video/mp4,video/*" class="hidden local-video-picker" data-video-id="client-reel-1" data-reel-index="0">
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content & Hook Breakdown -->
+            <div class="mt-5 space-y-3">
+              <div>
+                <h3 class="font-display font-bold text-xl text-ivory">Clean &amp; Engaging Motion Hook</h3>
+                <div class="mt-1.5 p-3 rounded-xl bg-white/[0.03] border border-white/10 font-mono text-xs text-white/80 leading-relaxed">
+                  <span class="text-limeNeon font-bold">HOOK:</span> "Here's how you can make your videos look clean and engaging without putting hours into motion graphics."
+                </div>
+              </div>
+
+              <!-- Key Editing Techniques Applied -->
+              <div class="pt-2 flex flex-wrap gap-2 font-mono text-[11px]">
+                <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-violet-300">✓ Context vs Text Split</span>
+                <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-cyan-300">✓ -50 Letter Spacing</span>
+                <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-limeNeon">✓ Pixel-Art B-Roll Sync</span>
+                <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-rose-300">✓ Kinetic Line Stacking</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- ==============================================================
+               CLIENT REEL 2: Scroll-Stopping Motion Ad Edit
+               ============================================================== -->
+          <article class="lg:col-span-6 bg-obsidian/90 border border-white/10 hover:border-roseNeon/60 transition-all rounded-3xl p-5 sm:p-6 flex flex-col group shadow-[0_20px_50px_rgba(0,0,0,0.6)]" data-cursor="▶ PLAY REEL 02">
+            <!-- Header Meta -->
+            <div class="flex items-center justify-between pb-3.5 border-b border-white/10 text-xs font-mono">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-roseNeon shadow-[0_0_8px_#EC4899]"></span>
+                <span class="text-ivory font-semibold">REEL 02 // D2C COMMERCIAL AD</span>
+              </div>
+              <span class="px-2 py-0.5 rounded bg-roseNeon/20 text-rose-300 border border-roseNeon/30 text-[10px]">9:16 VERTICAL • 00:41</span>
+            </div>
+
+            <!-- Video Player Frame -->
+            <div class="relative aspect-[9/16] max-h-[580px] w-full rounded-2xl overflow-hidden bg-[#12070c] mt-4 flex items-center justify-center border border-white/10 shadow-2xl select-none" id="reel-frame-2">
+              <!-- Live Scene-by-Scene Canvas Recreation of Client Video 2 (Always visible & animated even in sandboxed preview) -->
+              <canvas id="client-canvas-2" class="absolute inset-0 w-full h-full object-cover z-0"></canvas>
+
+              <!-- Native HTML5 Video Element (Plays MP4 with sound when file is available in directory or linked) -->
+              <video
+                id="client-reel-2"
+                class="absolute inset-0 w-full h-full object-cover z-[5] opacity-0 transition-opacity duration-300"
+                playsinline
+                loop
+                preload="auto">
+                <source src="From Klickpin.com- Civic election season captions for people who love beauty for cozy moods to share with clarity-pin-id-881157483365799254_2.mp4" type="video/mp4">
+                <source src="From Klickpin.com- Civic election season captions for people who love beauty for cozy moods to share with clarity-pin-id-881157483365799254.mp4" type="video/mp4">
+                <source src="viral_hook_motion_ad.mp4" type="video/mp4">
+              </video>
+
+              <!-- Viewfinder HUD Overlays -->
+              <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10 font-mono text-[10px]">
+                <span class="px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-md border border-white/15 text-rose-300">
+                  KITTL + VEO 3.1 AI
+                </span>
+                <span class="px-2.5 py-1 rounded-md bg-red-500/20 border border-red-500/40 text-red-300 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
+                  24 FPS REC
+                </span>
+              </div>
+
+              <!-- Single Clean Play / Pause Central Button (Auto-hides while playing) -->
+              <button
+                class="client-video-toggle absolute inset-0 m-auto w-16 h-16 rounded-full bg-roseNeon/90 hover:bg-roseNeon text-white flex items-center justify-center backdrop-blur-md border border-white/40 shadow-[0_0_30px_rgba(236,72,153,0.75)] z-20 opacity-0 group-hover:opacity-100 transition-all duration-300"
+                data-video-id="client-reel-2"
+                data-reel-index="1"
+                aria-label="Play or Pause Reel 2">
+                <svg class="play-icon w-6 h-6 fill-current translate-x-0.5 hidden" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <svg class="pause-icon w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+              </button>
+
+              <!-- Bottom In-Video Progress & Controls Bar -->
+              <div class="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/95 via-black/75 to-transparent z-20 flex flex-col gap-2">
+                <!-- Interactive Progress Scrubber -->
+                <div class="w-full h-1.5 bg-white/15 rounded-full overflow-hidden cursor-pointer reel-progress-track" data-reel-index="1">
+                  <div id="reel-progress-fill-2" class="h-full bg-gradient-to-r from-roseNeon to-amber-300 w-0 transition-all duration-75"></div>
+                </div>
+
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-2.5">
+                    <button class="sound-toggle-btn text-white/85 hover:text-roseNeon transition-colors" data-video-id="client-reel-2" data-reel-index="1" title="Toggle Audio">
+                      <svg class="w-4 h-4 sound-on-icon hidden fill-current" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                      <svg class="w-4 h-4 sound-off-icon fill-current" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                    </button>
+                    <span id="reel-time-2" class="video-time-label font-mono text-[10px] text-white/80 tabular-nums">00:00 / 00:41</span>
+                  </div>
+
+                  <label class="cursor-pointer font-mono text-[10px] text-rose-300 hover:text-rose-200 flex items-center gap-1 px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 border border-white/20 transition-all" title="Load your local MP4 file with full audio">
+                    <span>🎬 Load MP4 + Audio</span>
+                    <input type="file" accept="video/mp4,video/*" class="hidden local-video-picker" data-video-id="client-reel-2" data-reel-index="1">
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content & Hook Breakdown -->
+            <div class="mt-5 space-y-3">
+              <div>
+                <h3 class="font-display font-bold text-xl text-ivory">Scroll-Stopping Motion Ad Edit</h3>
+                <div class="mt-1.5 p-3 rounded-xl bg-white/[0.03] border border-white/10 font-mono text-xs text-white/80 leading-relaxed">
+                  <span class="text-roseNeon font-bold">HOOK:</span> "Stop posting static images in 2026. Good visuals need good movement. Static design to dynamic motion."
+                </div>
+              </div>
+
+              <!-- Key Editing Techniques Applied -->
+              <div class="pt-2 flex flex-wrap gap-2 font-mono text-[11px]">
+                <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-rose-300">✓ Veo 3.1 AI Motion</span>
+                <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-amber-300">✓ Luxury Jewelry 3D Pan</span>
+                <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-limeNeon">✓ Static-to-Ad Conversion</span>
+                <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-cyan-300">✓ Sound Riser Design</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Upcoming Commercial AI Ads Pipeline Notice -->
+        <div class="mt-8 p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-violetNeon/10 via-roseNeon/10 to-limeNeon/10 border border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <span class="w-10 h-10 rounded-xl bg-violetNeon/20 border border-violetNeon/40 flex items-center justify-center text-violet-300 shrink-0 font-mono text-lg font-bold">
+              AI
+            </span>
+            <div>
+              <div class="font-display font-bold text-base text-ivory">Coming Next: Commercial Brand AI Ads</div>
+              <div class="font-mono text-xs text-white/60">Dedicated slot prepared for your upcoming commercial brand videos &amp; AI-generated spec spots.</div>
+            </div>
+          </div>
+          <a href="#contact" data-cursor="✦ COMMISSION" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 font-mono text-xs text-limeNeon uppercase tracking-wider shrink-0 transition-all">
+            Book Commercial Project →
+          </a>
+        </div>
+
+        <!-- Interactive Master NLE Timeline Scrubber -->
+        <div class="mt-8 p-5 sm:p-6 rounded-2xl bg-obsidian/90 border border-white/10 shadow-inner">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <div class="flex items-center gap-3">
+              <button id="nle-play-btn" data-cursor="⏯ TIMELINE" class="w-9 h-9 rounded-xl bg-violetNeon hover:bg-violet-500 text-white flex items-center justify-center transition-colors shadow-[0_0_15px_rgba(139,92,246,0.5)]">
+                <svg id="nle-play-icon" class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+              </button>
+              <div>
+                <div class="font-mono text-xs text-ivory font-semibold">MASTER_VIRAL_HOOKS_TIMELINE.prproj</div>
+                <div class="font-mono text-[10px] text-white/45">SYNCED MULTI-TRACK NLE PLAYHEAD</div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4 font-mono text-xs">
+              <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-limeNeon tabular-nums" id="nle-timecode">00:00:08:14</span>
+              <span class="hidden sm:inline text-white/40">24.00 FPS • ACEScct COLOR</span>
+            </div>
+          </div>
+
+          <!-- Multi-Track Scrubber Area -->
+          <div id="nle-timeline-area" data-cursor="↔ SCRUB" class="relative select-none py-3 px-2 rounded-xl bg-black/70 border border-white/10 overflow-hidden">
+            <!-- Playhead Line -->
+            <div id="nle-playhead" class="absolute top-0 bottom-0 w-[2px] bg-limeNeon z-20 pointer-events-none shadow-[0_0_12px_#D4FF00]" style="left: 35%;">
+              <div class="w-3.5 h-3.5 -ml-[6px] rounded-sm bg-limeNeon rotate-45"></div>
+            </div>
+
+            <!-- Ruler Ticks -->
+            <div class="flex justify-between font-mono text-[9px] text-white/30 pb-2 border-b border-white/5 px-1">
+              <span>00:00</span><span>00:05</span><span>00:10</span><span>00:15</span><span>00:20</span><span>00:25</span><span>00:30</span><span>00:35</span><span>00:40</span>
+            </div>
+
+            <!-- Track 1: Client Reel 1 Kinetic Typography -->
+            <div class="mt-2 flex items-center gap-2">
+              <span class="w-20 font-mono text-[10px] text-violet-300 shrink-0">V1 // HOOK_1</span>
+              <div class="flex-1 h-6 rounded bg-violetNeon/20 border border-violetNeon/40 flex items-center px-2 font-mono text-[10px] text-violet-200 truncate">
+                VIRAL_HOOK_CLEAN_EDIT_4K_9x16.mp4
+              </div>
+            </div>
+
+            <!-- Track 2: Client Reel 2 AI Motion -->
+            <div class="mt-1.5 flex items-center gap-2">
+              <span class="w-20 font-mono text-[10px] text-rose-300 shrink-0">V2 // HOOK_2</span>
+              <div class="w-1/6"></div>
+              <div class="flex-1 h-6 rounded bg-roseNeon/20 border border-roseNeon/40 flex items-center px-2 font-mono text-[10px] text-rose-200 truncate">
+                VEO_KITTL_JEWELRY_MOTION_AD_FINAL.mp4
+              </div>
+              <div class="w-1/12"></div>
+            </div>
+
+            <!-- Track 3: Voiceover & Sound Design -->
+            <div class="mt-1.5 flex items-center gap-2">
+              <span class="w-20 font-mono text-[10px] text-cyan-300 shrink-0">A1 // SFX</span>
+              <div class="flex-1 h-6 rounded bg-cyanNeon/15 border border-cyanNeon/40 flex items-center px-2 font-mono text-[10px] text-cyan-200 truncate">
+                VIRAL_RISER_WHOOSH_POP_MASTER_48K.wav
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SECTION 04: SERVICES
+         =================================================================== -->
+    <section id="services" data-section-name="SCN 04 // SERVICES" class="cinema-page-section">
+      <div class="cinema-page-card p-6 sm:p-10 lg:p-14">
+
+        <div class="max-w-2xl mb-10">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-roseNeon/15 border border-roseNeon/30 font-mono text-xs text-rose-300 uppercase tracking-widest">
+            <span>● WHAT I DELIVER</span>
+          </div>
+          <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-ivory mt-3 tracking-tight">
+            Services Built for Attention
+          </h2>
+          <p class="text-white/60 text-sm sm:text-base mt-2">
+            Combining cinema-grade editing fundamentals with bleeding-edge generative AI models to produce visuals that previously required a 10-person studio.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Service 1 -->
+          <div class="p-7 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-violetNeon/50 transition-all group" data-cursor="✦ AI COMMERCIALS">
+            <div class="w-12 h-12 rounded-xl bg-violetNeon/15 border border-violetNeon/30 flex items-center justify-center text-violet-300 font-mono font-bold text-sm mb-5 group-hover:scale-110 transition-transform">
+              01
+            </div>
+            <h3 class="font-display font-bold text-xl text-ivory">AI Video Ads &amp; Commercials</h3>
+            <p class="text-white/60 text-sm mt-2.5 leading-relaxed">
+              Full-concept AI commercials using Kling AI, Higgsfield, and custom workflows—delivering surreal product visuals, impossible camera moves, and lifelike storytelling.
+            </p>
+            <ul class="mt-5 pt-5 border-t border-white/10 space-y-2 font-mono text-xs text-white/70">
+              <li class="flex items-center gap-2"><span class="text-limeNeon">✓</span> Generative CGI Product Shots</li>
+              <li class="flex items-center gap-2"><span class="text-limeNeon">✓</span> ElevenLabs Voice &amp; Sound Design</li>
+              <li class="flex items-center gap-2"><span class="text-limeNeon">✓</span> Claude-Assisted Ad Scripting</li>
+            </ul>
+          </div>
+
+          <!-- Service 2 -->
+          <div class="p-7 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-roseNeon/50 transition-all group" data-cursor="✦ SHORT-FORM REELS">
+            <div class="w-12 h-12 rounded-xl bg-roseNeon/15 border border-roseNeon/30 flex items-center justify-center text-rose-300 font-mono font-bold text-sm mb-5 group-hover:scale-110 transition-transform">
+              02
+            </div>
+            <h3 class="font-display font-bold text-xl text-ivory">High-Retention Reels &amp; Shorts</h3>
+            <p class="text-white/60 text-sm mt-2.5 leading-relaxed">
+              Pacing-obsessed vertical video edits for Instagram Reels, YouTube Shorts, and TikTok engineered for maximum 3-second hook retention and shareability.
+            </p>
+            <ul class="mt-5 pt-5 border-t border-white/10 space-y-2 font-mono text-xs text-white/70">
+              <li class="flex items-center gap-2"><span class="text-limeNeon">✓</span> Kinetic Captions &amp; Motion Graphics</li>
+              <li class="flex items-center gap-2"><span class="text-limeNeon">✓</span> Seamless Speed-Ramps &amp; Transitions</li>
+              <li class="flex items-center gap-2"><span class="text-limeNeon">✓</span> Viral Audio Mastering</li>
+            </ul>
+          </div>
+
+          <!-- Service 3 -->
+          <div class="p-7 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-cyanNeon/50 transition-all group" data-cursor="✦ MOTION & COLOR">
+            <div class="w-12 h-12 rounded-xl bg-cyanNeon/15 border border-cyanNeon/30 flex items-center justify-center text-cyan-300 font-mono font-bold text-sm mb-5 group-hover:scale-110 transition-transform">
+              03
+            </div>
+            <h3 class="font-display font-bold text-xl text-ivory">Motion Design &amp; Color Grading</h3>
+            <p class="text-white/60 text-sm mt-2.5 leading-relaxed">
+              Bespoke After Effects compositing, 3D camera tracking, UI/UX callouts, and theatrical DaVinci Resolve color grading tailored to your brand palette.
+            </p>
+            <ul class="mt-5 pt-5 border-t border-white/10 space-y-2 font-mono text-xs text-white/70">
+              <li class="flex items-center gap-2"><span class="text-limeNeon">✓</span> After Effects VFX &amp; Compositing</li>
+              <li class="flex items-center gap-2"><span class="text-limeNeon">✓</span> DaVinci Resolve Film Emulation</li>
+              <li class="flex items-center gap-2"><span class="text-limeNeon">✓</span> Multi-Ratio Campaign Delivery</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SECTION 05: TOOLS I USE (AUTHENTIC VECTOR SVGs — NO PLAIN LETTERS)
+         =================================================================== -->
+    <section id="tools" data-section-name="SCN 05 // TOOLS" class="cinema-page-section">
+      <div class="cinema-page-card p-6 sm:p-10 lg:p-14">
+
+        <!-- Section Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-limeNeon/15 border border-limeNeon/35 font-mono text-xs text-limeNeon uppercase tracking-widest">
+              <span>● PRODUCTION ARSENAL</span>
+            </div>
+            <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-ivory mt-3 tracking-tight">
+              Tools I Use
+            </h2>
+            <p class="text-white/60 text-sm sm:text-base mt-2 max-w-2xl">
+              My hybrid post-production &amp; generative AI workflow—combining industry-standard NLEs with next-generation neural video, audio, and reasoning models.
+            </p>
+          </div>
+          <div class="font-mono text-xs text-white/45 border border-white/10 rounded-xl px-4 py-2.5 bg-white/[0.02]">
+            8 CORE TOOLS • AUTHENTIC PIPELINE
+          </div>
+        </div>
+
+        <!-- CATEGORY 1: EDITING & MOTION (CapCut, After Effects, Canva, DaVinci Resolve) -->
+        <div class="mb-10">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="font-mono text-xs uppercase tracking-[0.2em] text-violet-300 font-semibold">[ 01 // EDITING &amp; MOTION ]</span>
+            <div class="h-px flex-1 bg-gradient-to-r from-violetNeon/40 to-transparent"></div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+            <!-- 1. CAPCUT: Authentic white-on-black rounded square with geometric CapCut clapper/scissors bow-tie vector mark and top frame bar -->
+            <div class="tool-pill" style="--tool-glow: rgba(255,255,255,0.18); --tool-border: rgba(255,255,255,0.45); --tool-shadow: rgba(255,255,255,0.15);" data-cursor="✦ CAPCUT PRO">
+              <div class="tool-icon-wrap bg-[#09090b] border border-white/25">
+                <svg class="w-9 h-9" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="CapCut Logo">
+                  <!-- Outer crisp white rounded frame -->
+                  <rect x="4" y="4" width="56" height="56" rx="14" fill="#0A0A0E" stroke="#FFFFFF" stroke-width="3"/>
+                  <!-- Top & bottom clapper frame bars -->
+                  <path d="M15 16H49" stroke="#FFFFFF" stroke-width="3.6" stroke-linecap="round"/>
+                  <path d="M15 48H49" stroke="#FFFFFF" stroke-width="3.6" stroke-linecap="round"/>
+                  <!-- Authentic geometric CapCut scissors / bow-tie intersecting blades + left loop -->
+                  <path d="M16 23.5L47 40.5" stroke="#FFFFFF" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M16 40.5L47 23.5" stroke="#FFFFFF" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M16 23.5V40.5" stroke="#FFFFFF" stroke-width="4.2" stroke-linecap="round"/>
+                  <path d="M47 20V25.5" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+                  <path d="M47 38.5V44" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-display font-bold text-base text-ivory">CapCut</h3>
+                  <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white/80">PRO</span>
+                </div>
+                <p class="text-xs text-white/55 mt-0.5">Fast-Paced Reels &amp; Rhythm Cuts</p>
+              </div>
+            </div>
+
+            <!-- 2. AFTER EFFECTS: Authentic dark-indigo rounded square (#00005B) with electric-violet border and crisp Ae vector paths -->
+            <div class="tool-pill" style="--tool-glow: rgba(153,153,255,0.28); --tool-border: #9999FF; --tool-shadow: rgba(153,153,255,0.3);" data-cursor="✦ AFTER EFFECTS">
+              <div class="tool-icon-wrap bg-[#00005B] border-2 border-[#9999FF]">
+                <svg class="w-9 h-9" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Adobe After Effects Logo">
+                  <!-- Authentic Ae Vector Paths -->
+                  <!-- Capital 'A' vector path with crossbar -->
+                  <path d="M11.5 46L21.2 17.5H27.4L37.1 46H31.5L29.4 39.2H19.1L17 46H11.5ZM20.5 34.4H28L24.3 22.6H24.1L20.5 34.4Z" fill="#9999FF"/>
+                  <!-- Lowercase 'e' vector path with curved bowl and bar -->
+                  <path d="M48.2 46.5C42.1 46.5 38.3 42.4 38.3 36.1C38.3 29.7 42.2 25.4 47.9 25.4C53.6 25.4 56.9 29.3 56.9 35.2C56.9 36.1 56.8 36.9 56.7 37.3H43.4C43.7 40.6 45.6 42.2 48.6 42.2C50.9 42.2 52.5 41.3 53.7 40.1L56.2 43.3C54.4 45.4 51.7 46.5 48.2 46.5ZM43.5 33.7H52C51.9 30.8 50.3 29.3 47.9 29.3C45.5 29.3 43.9 30.9 43.5 33.7Z" fill="#9999FF"/>
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-display font-bold text-base text-ivory">After Effects</h3>
+                  <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-[#9999FF]/20 text-[#9999FF]">VFX</span>
+                </div>
+                <p class="text-xs text-white/55 mt-0.5">Motion Graphics &amp; Compositing</p>
+              </div>
+            </div>
+
+            <!-- 3. CANVA: Authentic vibrant cyan-to-purple radial gradient circle (#00C4CC to #7D2AE8) with custom calligraphic brush-stroke C / script vector path -->
+            <div class="tool-pill" style="--tool-glow: rgba(0,196,204,0.28); --tool-border: #00C4CC; --tool-shadow: rgba(125,42,232,0.35);" data-cursor="✦ CANVA DESIGN">
+              <div class="tool-icon-wrap rounded-full p-0.5">
+                <svg class="w-11 h-11" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Canva Logo">
+                  <defs>
+                    <radialGradient id="canvaGrad" cx="25%" cy="20%" r="85%">
+                      <stop offset="0%" stop-color="#00C4CC"/>
+                      <stop offset="48%" stop-color="#3B73E2"/>
+                      <stop offset="100%" stop-color="#7D2AE8"/>
+                    </radialGradient>
+                  </defs>
+                  <!-- Authentic Radial Gradient Circle -->
+                  <circle cx="32" cy="32" r="29" fill="url(#canvaGrad)"/>
+                  <!-- Custom Calligraphic Script Brush-Stroke 'C' + Flourish Vector Path -->
+                  <path d="M41.8 23.6C43.2 23.6 44.5 22.3 44.5 20.1C44.5 16.9 40.9 14.5 35.6 14.5C25.9 14.5 17.8 23.1 17.8 34.4C17.8 43.5 23.6 49.5 32.5 49.5C39.6 49.5 44.7 45.4 46.8 39.7C47.2 38.6 46.2 37.7 45.2 38.4C42.6 42.3 38.5 44.8 33.8 44.8C27.5 44.8 23.8 40.2 23.8 33.7C23.8 24.8 29.6 18.2 36.1 18.2C38.8 18.2 40.2 19.5 40.2 21.1C40.2 22.2 39.5 22.9 39.5 23.2C39.5 23.5 40.5 23.6 41.8 23.6Z" fill="#FFFFFF"/>
+                  <path d="M35.5 33.8C37.8 31.8 40.8 31.5 42.9 32.8" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" opacity="0.85"/>
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-display font-bold text-base text-ivory">Canva</h3>
+                  <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-cyan-400/20 text-cyan-300">LAYOUT</span>
+                </div>
+                <p class="text-xs text-white/55 mt-0.5">Thumbnails, Storyboards &amp; Kits</p>
+              </div>
+            </div>
+
+            <!-- 4. DAVINCI RESOLVE: Authentic dark badge with the 3-leaf color-grading wheel rosette (red, green, blue/cyan overlapping petals) -->
+            <div class="tool-pill" style="--tool-glow: rgba(0,122,255,0.28); --tool-border: #38BDF8; --tool-shadow: rgba(255,59,48,0.25);" data-cursor="✦ DAVINCI RESOLVE">
+              <div class="tool-icon-wrap bg-[#0b0e17] border border-white/20">
+                <svg class="w-10 h-10 resolve-wheel" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="DaVinci Resolve Logo">
+                  <!-- Outer subtle metallic ring -->
+                  <circle cx="32" cy="32" r="27" fill="#0B0E17" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+                  <!-- Top Petal: Red/Coral (#FF3B30) -->
+                  <path d="M32 9C38.5 14.5 39.5 23.5 32 29.5C24.5 23.5 25.5 14.5 32 9Z" fill="#FF3B30"/>
+                  <circle cx="32" cy="19.5" r="7.5" fill="#FF453A" fill-opacity="0.85"/>
+                  <!-- Bottom Left Petal: Green (#30D158) -->
+                  <path d="M12.5 43.5C14 35 21.5 30 30 33.5C28.5 42 20.5 46.5 12.5 43.5Z" fill="#30D158"/>
+                  <circle cx="21.5" cy="38.2" r="7.5" fill="#34C759" fill-opacity="0.85"/>
+                  <!-- Bottom Right Petal: Cyan/Blue (#0A84FF) -->
+                  <path d="M51.5 43.5C43.5 46.5 35.5 42 34 33.5C42.5 30 50 35 51.5 43.5Z" fill="#0A84FF"/>
+                  <circle cx="42.5" cy="38.2" r="7.5" fill="#00C7BE" fill-opacity="0.85"/>
+                  <!-- Central Aperture Core -->
+                  <circle cx="32" cy="32" r="4.2" fill="#0B0E17" stroke="#FFFFFF" stroke-width="1.8"/>
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-display font-bold text-base text-ivory">DaVinci Resolve</h3>
+                  <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300">STUDIO</span>
+                </div>
+                <p class="text-xs text-white/55 mt-0.5">Cinema Color Grading &amp; Finishing</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- CATEGORY 2: AI TOOLS (Higgsfield, Kling AI, ElevenLabs, Claude) -->
+        <div>
+          <div class="flex items-center gap-3 mb-5">
+            <span class="font-mono text-xs uppercase tracking-[0.2em] text-limeNeon font-semibold">[ 02 // GENERATIVE AI STACK ]</span>
+            <div class="h-px flex-1 bg-gradient-to-r from-limeNeon/40 to-transparent"></div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+            <!-- 5. HIGGSFIELD: Authentic neon-chartreuse/lime badge (#D4FF00) with custom geometric prism/spark-slashed H vector emblem and glowing accent -->
+            <div class="tool-pill" style="--tool-glow: rgba(212,255,0,0.28); --tool-border: #D4FF00; --tool-shadow: rgba(212,255,0,0.32);" data-cursor="✦ HIGGSFIELD AI">
+              <div class="tool-icon-wrap bg-[#D4FF00] border border-white/40 shadow-[0_0_24px_rgba(212,255,0,0.45)]">
+                <svg class="w-9 h-9" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Higgsfield AI Logo">
+                  <!-- Geometric Prism / Spark-Slashed H Emblem -->
+                  <!-- Left Slanted Pillar -->
+                  <path d="M16 12L25 12L21 52H12L16 12Z" fill="#060609"/>
+                  <!-- Right Slanted Pillar -->
+                  <path d="M43 12L52 12L48 52H39L43 12Z" fill="#060609"/>
+                  <!-- Dynamic Diagonal Prism Cross-Slash & Center Diamond Spark -->
+                  <path d="M15 35L49 25L47 32L13 42L15 35Z" fill="#060609"/>
+                  <path d="M32 16L36.5 27.5L48 32L36.5 36.5L32 48L27.5 36.5L16 32L27.5 27.5L32 16Z" fill="#060609"/>
+                  <circle cx="32" cy="32" r="3.2" fill="#D4FF00"/>
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-display font-bold text-base text-ivory">Higgsfield</h3>
+                  <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-limeNeon/20 text-limeNeon">GEN-VIDEO</span>
+                </div>
+                <p class="text-xs text-white/55 mt-0.5">AI Camera Control &amp; VFX Motion</p>
+              </div>
+            </div>
+
+            <!-- 6. KLING AI: Authentic cyan-to-violet gradient badge with Kling's interlocking geometric S-ribbon / kinetic lens vector icon -->
+            <div class="tool-pill" style="--tool-glow: rgba(6,182,212,0.3); --tool-border: #06B6D4; --tool-shadow: rgba(139,92,246,0.35);" data-cursor="✦ KLING AI">
+              <div class="tool-icon-wrap bg-[#0b0d18] border border-cyan-400/40">
+                <svg class="w-10 h-10" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Kling AI Logo">
+                  <defs>
+                    <linearGradient id="klingRibbonA" x1="10" y1="10" x2="54" y2="54" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#00F2FE"/>
+                      <stop offset="55%" stop-color="#4FACFE"/>
+                      <stop offset="100%" stop-color="#8B5CF6"/>
+                    </linearGradient>
+                    <linearGradient id="klingRibbonB" x1="54" y1="12" x2="14" y2="52" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#A855F7"/>
+                      <stop offset="50%" stop-color="#EC4899"/>
+                      <stop offset="100%" stop-color="#06B6D4"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- Kling Interlocking Geometric S-Ribbon / Kinetic Mobius Lens -->
+                  <path d="M38 11C25.5 11 16 19.5 16 29.5C16 37 22 41.5 31.5 43.5L42 28C36 26.5 30.5 25 30.5 21.5C30.5 18.5 34 16.5 39.5 16.5C43.5 16.5 47 18 49.5 20L53 14.5C49 12 44 11 38 11Z" fill="url(#klingRibbonA)"/>
+                  <path d="M26 53C38.5 53 48 44.5 48 34.5C48 27 42 22.5 32.5 20.5L22 36C28 37.5 33.5 39 33.5 42.5C33.5 45.5 30 47.5 24.5 47.5C20.5 47.5 17 46 14.5 44L11 49.5C15 52 20 53 26 53Z" fill="url(#klingRibbonB)"/>
+                  <!-- Kinetic Lens Highlight -->
+                  <circle cx="32" cy="32" r="3.5" fill="#FFFFFF"/>
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-display font-bold text-base text-ivory">Kling AI</h3>
+                  <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-cyan-400/20 text-cyan-300">1.6 PRO</span>
+                </div>
+                <p class="text-xs text-white/55 mt-0.5">Photorealistic AI Video Synthesis</p>
+              </div>
+            </div>
+
+            <!-- 7. ELEVENLABS: Crisp minimalist black/dark-violet badge with precision twin vertical audio-wave bars (||) that animate subtly on hover -->
+            <div class="tool-pill" style="--tool-glow: rgba(255,255,255,0.22); --tool-border: rgba(255,255,255,0.5); --tool-shadow: rgba(139,92,246,0.28);" data-cursor="✦ ELEVENLABS">
+              <div class="tool-icon-wrap bg-gradient-to-br from-[#0a0a0f] to-[#1a1429] border border-white/25">
+                <svg class="w-9 h-9" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ElevenLabs Logo">
+                  <!-- Subtle outer acoustic ring -->
+                  <rect x="6" y="6" width="52" height="52" rx="14" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
+                  <!-- Precision Twin Vertical Bars (||) of ElevenLabs with hover animation class -->
+                  <rect class="eleven-bar-1" x="21" y="15" width="7.5" height="34" rx="2.5" fill="#FAF7F2"/>
+                  <rect class="eleven-bar-2" x="35.5" y="15" width="7.5" height="34" rx="2.5" fill="#FAF7F2"/>
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-display font-bold text-base text-ivory">ElevenLabs</h3>
+                  <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white/80">AUDIO AI</span>
+                </div>
+                <p class="text-xs text-white/55 mt-0.5">Neural Voiceovers &amp; SFX Design</p>
+              </div>
+            </div>
+
+            <!-- 8. CLAUDE: Authentic warm terracotta-coral (#D97757) 12-ray asymmetric Anthropic Claude starburst vector mark -->
+            <div class="tool-pill" style="--tool-glow: rgba(217,119,87,0.3); --tool-border: #D97757; --tool-shadow: rgba(217,119,87,0.32);" data-cursor="✦ CLAUDE AI">
+              <div class="tool-icon-wrap bg-[#1c1310] border border-[#D97757]/50">
+                <svg class="w-10 h-10 claude-star" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Anthropic Claude Logo">
+                  <!-- Authentic Warm Terracotta-Coral (#D97757) 12-Ray Asymmetric Starburst Vector Mark -->
+                  <g stroke="#D97757" stroke-linecap="round">
+                    <!-- Primary 6 Asymmetric Organic Rays -->
+                    <line x1="32" y1="32" x2="32" y2="10" stroke-width="5.2"/>
+                    <line x1="32" y1="32" x2="51.5" y2="21" stroke-width="5.2"/>
+                    <line x1="32" y1="32" x2="50.5" y2="43.5" stroke-width="5.2"/>
+                    <line x1="32" y1="32" x2="32" y2="54" stroke-width="5.2"/>
+                    <line x1="32" y1="32" x2="13" y2="43" stroke-width="5.2"/>
+                    <line x1="32" y1="32" x2="13.5" y2="20.5" stroke-width="5.2"/>
+                    <!-- Interleaved Secondary 6 Asymmetric Rays -->
+                    <line x1="32" y1="32" x2="43.5" y2="13" stroke-width="4.4"/>
+                    <line x1="32" y1="32" x2="54" y2="32.5" stroke-width="4.4"/>
+                    <line x1="32" y1="32" x2="42.5" y2="51" stroke-width="4.4"/>
+                    <line x1="32" y1="32" x2="20.5" y2="51.5" stroke-width="4.4"/>
+                    <line x1="32" y1="32" x2="10" y2="31.5" stroke-width="4.4"/>
+                    <line x1="32" y1="32" x2="21.5" y2="12.5" stroke-width="4.4"/>
+                  </g>
+                  <circle cx="32" cy="32" r="5.5" fill="#D97757"/>
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-display font-bold text-base text-ivory">Claude</h3>
+                  <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-[#D97757]/20 text-[#D97757]">SCRIPT &amp; IDEATION</span>
+                </div>
+                <p class="text-xs text-white/55 mt-0.5">Creative Direction, Hooks &amp; Prompts</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SECTION 06: CONTACT & PROJECT INQUIRY
+         =================================================================== -->
+    <section id="contact" data-section-name="SCN 06 // CONTACT" class="cinema-page-section">
+      <div class="cinema-page-card p-6 sm:p-12 lg:p-16 relative overflow-hidden">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <!-- Left Column: Direct Pitch & Contact Channels -->
+          <div class="lg:col-span-7">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/30 font-mono text-xs text-emerald-300 uppercase tracking-widest">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <span>READY TO ROLL CAMERA</span>
+            </div>
+
+            <h2 class="font-display font-extrabold text-3xl sm:text-5xl lg:text-6xl text-ivory mt-4 tracking-tight leading-[1.08]">
+              Let's Produce Your Next <span class="text-transparent bg-clip-text bg-gradient-to-r from-violetNeon via-roseNeon to-limeNeon">Viral Campaign.</span>
+            </h2>
+
+            <p class="text-white/65 text-base sm:text-lg mt-4 max-w-xl leading-relaxed">
+              Whether you need AI-powered product commercials for a D2C launch or high-retention reels that scale your brand, reach out directly.
+            </p>
+
+            <!-- Direct Contact Pills -->
+            <div class="mt-8 flex flex-wrap gap-4">
+              <button id="copy-email-btn" data-email="yacharya529@gamil.com" data-cursor="✦ COPY EMAIL" class="group flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 transition-all">
+                <span class="w-9 h-9 rounded-xl bg-violetNeon/20 border border-violetNeon/40 flex items-center justify-center text-violet-300">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                </span>
+                <div class="text-left">
+                  <div class="font-mono text-[10px] text-white/45 uppercase">Direct Email (Click to Copy)</div>
+                  <div id="email-text" class="font-sans font-semibold text-sm text-ivory group-hover:text-limeNeon transition-colors">yacharya529@gamil.com</div>
+                </div>
+              </button>
+
+              <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" data-cursor="↗ INSTAGRAM" class="flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 transition-all">
+                <span class="w-9 h-9 rounded-xl bg-roseNeon/20 border border-roseNeon/40 flex items-center justify-center text-rose-300">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                </span>
+                <div class="text-left">
+                  <div class="font-mono text-[10px] text-white/45 uppercase">Instagram Reels</div>
+                  <div class="font-sans font-semibold text-sm text-ivory">@yuvraj.acharya</div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Quick Project Brief Generator -->
+          <div class="lg:col-span-5">
+            <form id="brief-form" class="p-6 sm:p-7 rounded-2xl bg-black/50 border border-white/10 space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <span class="font-mono text-xs uppercase tracking-wider text-violet-300">[ QUICK PROJECT BRIEF ]</span>
+                <span class="font-mono text-[10px] text-limeNeon">DIRECT TO INBOX</span>
+              </div>
+
+              <div>
+                <label class="block font-mono text-[11px] text-white/60 uppercase mb-1.5">Your Name / Brand</label>
+                <input id="brief-name" name="name" type="text" required placeholder="e.g. Aryan — D2C Founder" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-ivory placeholder:text-white/30 focus:outline-none focus:border-violetNeon transition-colors" />
+              </div>
+
+              <div>
+                <label class="block font-mono text-[11px] text-white/60 uppercase mb-1.5">Your Email / WhatsApp / Instagram</label>
+                <input id="brief-contact" name="contact" type="text" required placeholder="e.g. aryan@brand.com or @aryan" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-ivory placeholder:text-white/30 focus:outline-none focus:border-violetNeon transition-colors" />
+              </div>
+
+              <div>
+                <label class="block font-mono text-[11px] text-white/60 uppercase mb-1.5">Project Type</label>
+                <select id="brief-type" name="project_type" class="w-full px-4 py-3 rounded-xl bg-[#11111a] border border-white/10 text-sm text-ivory focus:outline-none focus:border-violetNeon transition-colors">
+                  <option value="AI Video Commercial (Kling / Higgsfield)">AI Video Commercial (Kling / Higgsfield)</option>
+                  <option value="Brand Reels & Short-Form Retainer">Brand Reels &amp; Short-Form Retainer</option>
+                  <option value="After Effects Motion & DaVinci Color">After Effects Motion &amp; DaVinci Color</option>
+                  <option value="Full Campaign Production">Full Campaign Production</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block font-mono text-[11px] text-white/60 uppercase mb-1.5">Project Details</label>
+                <textarea id="brief-details" name="details" rows="3" required placeholder="Tell me about your brand, deliverables & timeline..." class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-ivory placeholder:text-white/30 focus:outline-none focus:border-violetNeon transition-colors"></textarea>
+              </div>
+
+              <button id="brief-submit-btn" type="submit" data-cursor="✦ SEND BRIEF" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-violetNeon via-fuchsia-500 to-roseNeon text-white font-display font-bold text-sm tracking-wide shadow-[0_10px_30px_rgba(139,92,246,0.4)] hover:brightness-110 transition-all">
+                Send Project Brief →
+              </button>
+
+              <div id="brief-toast" class="hidden p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-400/30 font-mono text-xs text-emerald-300 space-y-2 text-center">
+                <div id="brief-toast-msg">✓ Brief sent to Yuvraj's inbox!</div>
+                <div class="flex items-center justify-center gap-3 pt-1">
+                  <a id="brief-gmail-link" href="#" target="_blank" rel="noopener noreferrer" class="underline text-limeNeon hover:text-white">Open in Gmail ↗</a>
+                  <span class="text-white/30">|</span>
+                  <a id="brief-mailto-link" href="#" class="underline text-cyan-300 hover:text-white">Open Email App ↗</a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-white/45">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-limeNeon"></span>
+            <span>© 2026 YUVRAJ ACHARYA • ALL RIGHTS RESERVED</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span>RENDERED AT 24FPS</span>
+            <span>•</span>
+            <a href="#hero" data-cursor="↑ TOP" class="text-ivory hover:text-limeNeon transition-colors">BACK TO TOP ↑</a>
+          </div>
+        </footer>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =====================================================================
+       JAVASCRIPT: VIEWFINDER CURSOR, 24FPS TIMECODE, 3D PAGE SCROLL & REELS
+       ===================================================================== -->
+  <script>
+    window.onload = function () {
+      /* -------------------------------------------------------------------
+         1. DIRECTOR'S VIEWFINDER CURSOR + LIVE 24FPS TIMECODE HUD
+         ------------------------------------------------------------------- */
+      const cursorRoot = document.getElementById('cursor-root');
+      const cursorDot = document.getElementById('cursor-dot');
+      const cursorReticle = document.getElementById('cursor-reticle');
+      const cursorGhost = document.getElementById('cursor-ghost');
+      const cursorHud = document.getElementById('cursor-hud');
+      const cursorActionPill = document.getElementById('cursor-action-pill');
+      const cursorTimecodeEl = document.getElementById('cursor-timecode');
+      const heroClockEl = document.getElementById('hero-live-clock');
+
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let reticleX = mouseX, reticleY = mouseY;
+      let ghostX = mouseX, ghostY = mouseY;
+      let hudX = mouseX, hudY = mouseY;
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+      });
+
+      // Interactive hover states with custom action pill labels
+      const bindCursorTargets = () => {
+        const targets = document.querySelectorAll('a, button, input, select, textarea, [data-cursor]');
+        targets.forEach((el) => {
+          el.addEventListener('mouseenter', () => {
+            cursorRoot.classList.add('cursor-hover');
+            const label = el.getAttribute('data-cursor') || '✦ CLICK';
+            cursorActionPill.textContent = label;
+          });
+          el.addEventListener('mouseleave', () => {
+            cursorRoot.classList.remove('cursor-hover');
+          });
+        });
+      };
+      bindCursorTargets();
+
+      // Live 24fps Timecode counter that accelerates when scrolling!
+      let totalFrames = 12 * 24 + 8; // starts at 00:00:12:08
+      let scrollVelocityBoost = 0;
+
+      const formatTimecode = (frames) => {
+        const f = Math.floor(frames % 24);
+        const totalSeconds = Math.floor(frames / 24);
+        const s = totalSeconds % 60;
+        const m = Math.floor(totalSeconds / 60) % 60;
+        const h = Math.floor(totalSeconds / 3600) % 24;
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${pad(h)}:${pad(m)}:${pad(s)}:${pad(f)}`;
+      };
+
+      /* -------------------------------------------------------------------
+         2. CREATIVE "WORKED WITH" BRACKET FRAME & 3D TILT BRAND CARDS
+         ------------------------------------------------------------------- */
+      const bracketShowcase = document.getElementById('bracket-showcase');
+      if (bracketShowcase) {
+        bracketShowcase.addEventListener('mousemove', (e) => {
+          const rect = bracketShowcase.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          bracketShowcase.style.setProperty('--mouse-x', `${x}px`);
+          bracketShowcase.style.setProperty('--mouse-y', `${y}px`);
+        });
+      }
+
+      const tiltCards = document.querySelectorAll('.brand-tilt-card');
+      tiltCards.forEach((card) => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -8;
+          const rotateY = ((x - centerX) / centerX) * 8;
+
+          card.style.transform = `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-4px)`;
+          card.style.setProperty('--card-x', `${x}px`);
+          card.style.setProperty('--card-y', `${y}px`);
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+        });
+      });
+
+      /* -------------------------------------------------------------------
+         3. HEAVY, BUTTERY-SMOOTH 3D PAGE-TO-PAGE SCROLL MOTION
+         ------------------------------------------------------------------- */
+      const sections = Array.from(document.querySelectorAll('.cinema-page-section'));
+      const progressBar = document.getElementById('scroll-progress-bar');
+      const sectionCodeEl = document.getElementById('active-section-code');
+      const sectionDots = Array.from(document.querySelectorAll('.section-dot'));
+      const toggle3dBtn = document.getElementById('toggle-3d-btn');
+      const toggle3dLabel = document.getElementById('toggle-3d-label');
+      const toggle3dDot = document.getElementById('toggle-3d-dot');
+
+      let is3dScrollEnabled = true;
+      let lastScrollY = window.scrollY;
+      let smoothVelocity = 0;
+
+      if (toggle3dBtn) {
+        toggle3dBtn.addEventListener('click', () => {
+          is3dScrollEnabled = !is3dScrollEnabled;
+          toggle3dLabel.textContent = is3dScrollEnabled ? 'ON' : 'OFF';
+          toggle3dLabel.className = is3dScrollEnabled ? 'text-limeNeon' : 'text-white/50';
+          toggle3dDot.className = is3dScrollEnabled
+            ? 'w-2 h-2 rounded-full bg-violetNeon shadow-[0_0_8px_#8B5CF6]'
+            : 'w-2 h-2 rounded-full bg-white/30';
+
+          if (!is3dScrollEnabled) {
+            sections.forEach((sec) => {
+              sec.style.transform = 'none';
+              sec.style.opacity = '1';
+              sec.style.filter = 'none';
+            });
+          }
+        });
+      }
+
+      const updatePageScrollTransforms = () => {
+        const scrollY = window.scrollY;
+        const delta = scrollY - lastScrollY;
+        lastScrollY = scrollY;
+
+        smoothVelocity += (delta - smoothVelocity) * 0.18;
+        scrollVelocityBoost = Math.min(Math.abs(smoothVelocity) * 0.45, 14);
+
+        // Top Neon Progress Bar
+        const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        const scrollRatio = Math.min(1, Math.max(0, scrollY / maxScroll));
+        if (progressBar) {
+          progressBar.style.width = `${(scrollRatio * 100).toFixed(2)}%`;
+        }
+
+        const vh = window.innerHeight;
+        let currentActiveSectionId = 'hero';
+        let currentActiveSectionName = 'SCN 01 // HERO';
+
+        sections.forEach((sec) => {
+          const rect = sec.getBoundingClientRect();
+          const secCenter = rect.top + rect.height / 2;
+
+          // Track active section
+          if (rect.top <= vh * 0.52 && rect.bottom >= vh * 0.25) {
+            currentActiveSectionId = sec.id;
+            currentActiveSectionName = sec.getAttribute('data-section-name') || 'SCN';
+          }
+
+          if (!is3dScrollEnabled) return;
+
+          // Compute normalized entry & exit progress for dramatic 3D stacked page motion
+          // When entering from bottom: rect.top goes from vh -> vh * 0.15
+          if (rect.top > vh * 0.18) {
+            const enterProgress = Math.min(1, Math.max(0, (vh - rect.top) / (vh * 0.85)));
+            const eased = 1 - Math.pow(1 - enterProgress, 3); // cubic ease-out
+            const scale = 0.88 + 0.12 * eased;
+            const rotateX = (1 - eased) * 12;
+            const translateY = (1 - eased) * 55;
+            const opacity = 0.25 + 0.75 * eased;
+
+            sec.style.transformOrigin = 'center top';
+            sec.style.transform = `perspective(1400px) translate3d(0, ${translateY.toFixed(1)}px, 0) scale(${scale.toFixed(3)}) rotateX(${rotateX.toFixed(2)}deg)`;
+            sec.style.opacity = opacity.toFixed(3);
+          } else if (rect.bottom < vh * 0.82 && rect.top < 0) {
+            // Receding into depth as user scrolls past
+            const exitProgress = Math.min(1, Math.max(0, Math.abs(rect.top) / (rect.height * 0.95)));
+            const scale = 1 - exitProgress * 0.08;
+            const rotateX = -exitProgress * 6;
+            const opacity = Math.max(0.35, 1 - exitProgress * 0.65);
+
+            sec.style.transformOrigin = 'center bottom';
+            sec.style.transform = `perspective(1400px) scale(${scale.toFixed(3)}) rotateX(${rotateX.toFixed(2)}deg)`;
+            sec.style.opacity = opacity.toFixed(3);
+          } else {
+            // Locked in sweet spot
+            const skewY = Math.max(-1.2, Math.min(1.2, smoothVelocity * 0.025));
+            sec.style.transform = `perspective(1400px) scale(1) rotateX(0deg) skewY(${skewY.toFixed(2)}deg)`;
+            sec.style.opacity = '1';
+          }
+        });
+
+        // Update floating telemetry nav
+        if (sectionCodeEl) sectionCodeEl.textContent = currentActiveSectionName;
+        sectionDots.forEach((dot) => {
+          const isMatch = dot.getAttribute('data-section-dot') === currentActiveSectionId;
+          dot.className = isMatch
+            ? 'section-dot w-2.5 h-5 rounded-full bg-limeNeon transition-all duration-300 shadow-[0_0_12px_#D4FF00]'
+            : 'section-dot w-2.5 h-2.5 rounded-full bg-white/20 hover:bg-white/60 transition-all duration-300';
+        });
+      };
+
+      /* -------------------------------------------------------------------
+         4. INTERACTIVE CLIENT REELS (PLAY/PAUSE, AUDIO, SCRUB & LOCAL MP4)
+         ------------------------------------------------------------------- */
+      const reelStates = [
+        {
+          id: 'client-reel-1',
+          canvasId: 'client-canvas-1',
+          progressId: 'reel-progress-fill-1',
+          timeId: 'reel-time-1',
+          duration: 45,
+          currentTime: 0,
+          playing: true,
+          hasNativeVideo: false
+        },
+        {
+          id: 'client-reel-2',
+          canvasId: 'client-canvas-2',
+          progressId: 'reel-progress-fill-2',
+          timeId: 'reel-time-2',
+          duration: 41.5,
+          currentTime: 0,
+          playing: true,
+          hasNativeVideo: false
+        }
+      ];
+
+      const videoElements = reelStates.map((r) => document.getElementById(r.id));
+      const canvasElements = reelStates.map((r) => document.getElementById(r.canvasId));
+      const toggleButtons = document.querySelectorAll('.client-video-toggle');
+      const soundButtons = document.querySelectorAll('.sound-toggle-btn');
+      const localPickers = document.querySelectorAll('.local-video-picker');
+      const progressTracks = document.querySelectorAll('.reel-progress-track');
+
+      const formatSec = (s) => {
+        const m = Math.floor(s / 60);
+        const sec = Math.floor(s % 60);
+        return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+      };
+
+      // Check if native video loads from local directory
+      videoElements.forEach((vid, idx) => {
+        if (!vid) return;
+        vid.muted = true;
+        vid.addEventListener('loadeddata', () => {
+          if (vid.readyState >= 2) {
+            reelStates[idx].hasNativeVideo = true;
+            reelStates[idx].duration = vid.duration || reelStates[idx].duration;
+            vid.classList.remove('opacity-0');
+            if (reelStates[idx].playing) {
+              vid.play().catch(() => {});
+            }
+          }
+        });
+      });
+
+      // Resize canvases to crisp 9:16 resolution
+      const resizeReelCanvases = () => {
+        canvasElements.forEach((canvas) => {
+          if (!canvas) return;
+          canvas.width = 360;
+          canvas.height = 640;
+        });
+      };
+      resizeReelCanvases();
+      window.addEventListener('resize', resizeReelCanvases);
+
+      // Helper to draw rounded rectangles on canvas
+      const fillRoundRect = (ctx, x, y, w, h, r, fill, stroke) => {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+        if (fill) {
+          ctx.fillStyle = fill;
+          ctx.fill();
+        }
+        if (stroke) {
+          ctx.strokeStyle = stroke;
+          ctx.stroke();
+        }
+      };
+
+      // Scene-by-scene renderer for Client Video 1 (45s: Clean & Engaging Motion Hook)
+      const renderClientReel1 = (ctx, t) => {
+        const w = 360, h = 640;
+        ctx.clearRect(0, 0, w, h);
+
+        // Helper: Draw dark teal studio speaker (creator with glasses, black hoodie & podcast mic)
+        const drawCreatorStudio = (captionTop, captionMid, captionBot, accentStyle) => {
+          const grad = ctx.createRadialGradient(180, 210, 20, 180, 320, 340);
+          grad.addColorStop(0, '#3d5a58');
+          grad.addColorStop(0.55, '#182524');
+          grad.addColorStop(1, '#070a0a');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+
+          // Studio chair backrest
+          fillRoundRect(ctx, 115, 195, 145, 220, 24, '#0c0e10');
+
+          // Black hoodie shoulders & torso
+          ctx.fillStyle = '#0f1215';
+          ctx.beginPath();
+          ctx.ellipse(185, 445, 125, 155, 0, Math.PI, 0);
+          ctx.fill();
+          ctx.fillRect(60, 440, 250, 200);
+
+          // Neck & Head
+          ctx.fillStyle = '#d8a98c';
+          ctx.beginPath();
+          ctx.arc(185, 225, 42, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Beard & mustache
+          ctx.fillStyle = '#1b1d21';
+          ctx.beginPath();
+          ctx.arc(185, 236, 40, 0.15, Math.PI - 0.15);
+          ctx.fill();
+
+          // Center-parted dark hair
+          ctx.fillStyle = '#121317';
+          ctx.beginPath();
+          ctx.arc(185, 196, 45, Math.PI, 0);
+          ctx.fill();
+
+          // Glasses frames
+          ctx.strokeStyle = 'rgba(255,255,255,0.75)';
+          ctx.lineWidth = 2;
+          fillRoundRect(ctx, 153, 208, 26, 18, 4, null, 'rgba(255,255,255,0.75)');
+          fillRoundRect(ctx, 188, 208, 26, 18, 4, null, 'rgba(255,255,255,0.75)');
+          ctx.beginPath();
+          ctx.moveTo(179, 215);
+          ctx.lineTo(188, 215);
+          ctx.stroke();
+
+          // Podcast boom arm & microphone on left
+          ctx.strokeStyle = '#22262a';
+          ctx.lineWidth = 7;
+          ctx.beginPath();
+          ctx.moveTo(0, 385);
+          ctx.lineTo(96, 305);
+          ctx.stroke();
+          fillRoundRect(ctx, 85, 275, 36, 62, 14, '#171a1d', '#333940');
+
+          // Kinetic chest-aligned captions
+          ctx.textAlign = 'center';
+          if (captionTop) {
+            ctx.font = '500 18px "Plus Jakarta Sans", sans-serif';
+            ctx.fillStyle = 'rgba(255,255,255,0.85)';
+            ctx.fillText(captionTop, 180, 355);
+          }
+          if (captionMid) {
+            ctx.font = accentStyle === 'script'
+              ? '400 34px "Great Vibes", cursive'
+              : '700 28px "Plus Jakarta Sans", sans-serif';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillText(captionMid, 180, 388);
+          }
+          if (captionBot) {
+            ctx.font = accentStyle === 'script-bot'
+              ? '400 36px "Great Vibes", cursive'
+              : '600 22px "Plus Jakarta Sans", sans-serif';
+            ctx.fillStyle = '#d4ff00';
+            ctx.fillText(captionBot, 180, 422);
+          }
+        };
+
+        if (t < 2.2) {
+          // 00:00 - 00:02: Blurred light-to-dark glass backdrop: "Here's how you can make your videos look clean"
+          const g = ctx.createLinearGradient(0, 0, w, h);
+          g.addColorStop(0, t < 1.1 ? '#d7e1df' : '#182c2b');
+          g.addColorStop(1, t < 1.1 ? '#9cb2ae' : '#081111');
+          ctx.fillStyle = g;
+          ctx.fillRect(0, 0, w, h);
+
+          ctx.textAlign = 'center';
+          if (t < 1.1) {
+            ctx.fillStyle = '#111616';
+            ctx.font = '700 32px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText("Here's how", 180, 305);
+            ctx.font = '500 22px "Plus Jakarta Sans", sans-serif';
+            ctx.fillStyle = 'rgba(17,22,22,0.65)';
+            ctx.fillText('you  can', 165, 336);
+          } else {
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '500 20px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('your', 110, 305);
+            ctx.font = '700 34px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('videos', 200, 305);
+            ctx.font = '600 28px "Plus Jakarta Sans", sans-serif';
+            ctx.fillStyle = 'rgba(255,255,255,0.8)';
+            ctx.fillText('look clean', 185, 340);
+          }
+        } else if (t < 4.5) {
+          // 00:02 - 00:04.5: Creator studio "without putting hours into motion graphics"
+          const word = t < 3.2 ? 'without' : 'hours into';
+          const sub = t < 3.2 ? 'putting' : 'motion graphics';
+          drawCreatorStudio(word, sub, '');
+        } else if (t < 8.0) {
+          // 00:04.5 - 00:08: Minimalist White Flowchart "First we will divide it into two parts: Context | Text"
+          ctx.fillStyle = '#f8f9fa';
+          ctx.fillRect(0, 0, w, h);
+          ctx.textAlign = 'center';
+          ctx.fillStyle = '#212529';
+          ctx.font = '700 32px "Plus Jakarta Sans", sans-serif';
+          ctx.fillText('First', 180, 235);
+          ctx.font = '600 17px "Plus Jakarta Sans", sans-serif';
+          ctx.fillText('we will divide it', 180, 262);
+          ctx.fillText('into two parts', 180, 284);
+
+          // Split tree lines
+          ctx.strokeStyle = '#212529';
+          ctx.lineWidth = 6;
+          ctx.beginPath();
+          ctx.moveTo(180, 302);
+          ctx.lineTo(180, 345);
+          if (t > 5.6) {
+            ctx.moveTo(95, 345);
+            ctx.lineTo(265, 345);
+            ctx.moveTo(95, 345);
+            ctx.lineTo(95, 378);
+            ctx.moveTo(265, 345);
+            ctx.lineTo(265, 378);
+          }
+          ctx.stroke();
+
+          if (t > 6.2) {
+            ctx.font = '700 22px "Plus Jakarta Sans", sans-serif';
+            ctx.fillStyle = '#495057';
+            ctx.fillText('Context', 95, 412);
+            ctx.fillText('Text', 265, 412);
+          }
+        } else if (t < 12.6) {
+          // 00:08 - 00:12.6: Creator "for the context we will be using basic animations ONLY where they fit"
+          const line1 = t < 10.2 ? 'the context' : 'ONLY';
+          const line2 = t < 10.2 ? 'basic' : 'where they fit';
+          drawCreatorStudio(line1, line2, '');
+        } else if (t < 15.2) {
+          // 00:12.6 - 00:15.2: Pixel-Art Red Sports Car traveling at 40 mph with palm trees & skyline
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, w, h);
+          ctx.textAlign = 'center';
+          ctx.fillStyle = '#222';
+          ctx.font = '700 22px "Plus Jakarta Sans", sans-serif';
+          ctx.fillText(t < 13.8 ? 'traveling' : 'at 40 mph', 180, 175);
+
+          // Rounded card sky & ocean
+          fillRoundRect(ctx, 40, 195, 280, 240, 20, '#9be2f8');
+          // Ocean water strip
+          ctx.fillStyle = '#5ca4d6';
+          ctx.fillRect(40, 340, 280, 55);
+          // Road strip
+          ctx.fillStyle = '#495057';
+          ctx.fillRect(40, 395, 280, 40);
+
+          // Palm trees moving horizontally
+          const treeOffset = ((t - 12.6) * 65) % 260;
+          [110 - treeOffset + 180, 260 - treeOffset + 120].forEach((tx) => {
+            const wrappedX = 55 + ((tx % 240 + 240) % 240);
+            ctx.fillStyle = '#7c4d2b';
+            ctx.fillRect(wrappedX, 265, 8, 130);
+            ctx.fillStyle = '#3b8c2a';
+            ctx.beginPath();
+            ctx.arc(wrappedX + 4, 265, 26, Math.PI, 0);
+            ctx.fill();
+          });
+
+          // Red Ferrari sports car
+          fillRoundRect(ctx, 82, 366, 196, 34, 8, '#d9261c');
+          ctx.fillStyle = '#b91c1c';
+          ctx.beginPath();
+          ctx.moveTo(125, 366);
+          ctx.lineTo(165, 344);
+          ctx.lineTo(225, 344);
+          ctx.lineTo(255, 366);
+          ctx.fill();
+          // Wheels
+          ctx.fillStyle = '#1e293b';
+          ctx.beginPath();
+          ctx.arc(125, 400, 16, 0, Math.PI * 2);
+          ctx.arc(235, 400, 16, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (t < 18.2) {
+          // 00:15.2 - 00:18.2: White screen "[he felt a sense of clarity]"
+          if (t < 16.4) {
+            drawCreatorStudio('but for', 'the moments like', '');
+          } else {
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, w, h);
+            ctx.textAlign = 'center';
+            ctx.font = '600 21px "Plus Jakarta Sans", sans-serif';
+            ctx.fillStyle = '#212529';
+            ctx.fillText('[he felt a sense of clarity]', 180, 320);
+          }
+        } else if (t < 28.0) {
+          // 00:18.2 - 00:28: "Text or a subtle B-Roll" -> "more Engaging and Premium"
+          if (t < 22.5) {
+            drawCreatorStudio('Text', 'B-Roll', 'or a subtle');
+          } else {
+            drawCreatorStudio('more', 'Engaging', 'Premium', 'script-bot');
+          }
+        } else if (t < 33.5) {
+          // 00:28 - 00:33.5: Selection box "font" & Letter spacing "VA 0 -> -50"
+          drawCreatorStudio('', '', '');
+          if (t < 30.8) {
+            fillRoundRect(ctx, 130, 348, 110, 40, 4, 'rgba(14,165,233,0.12)', '#38bdf8');
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '700 22px "Plus Jakarta Sans", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('font', 185, 375);
+          } else {
+            const val = Math.max(-50, Math.floor(-((t - 30.8) / 2.2) * 50));
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = '700 22px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(`VA  ${val}`, 180, 380);
+          }
+        } else {
+          // 00:33.5 - 00:45: Stacking lines "while Stacking lines or words" -> "for a clean Look professional"
+          if (t < 39.2) {
+            drawCreatorStudio('while', 'Stacking', 'lines or words');
+          } else {
+            drawCreatorStudio('for a', 'clean Look', 'professional', 'script');
+          }
+        }
+      };
+
+      // Scene-by-scene renderer for Client Video 2 (41.5s: Scroll-Stopping Motion Ad Edit)
+      const renderClientReel2 = (ctx, t) => {
+        const w = 360, h = 640;
+        ctx.clearRect(0, 0, w, h);
+
+        // Helper: Draw creator in maroon button-up shirt with clear glasses & studio mic
+        const drawMaroonCreator = (behindTitle, frontCaption) => {
+          const grad = ctx.createLinearGradient(0, 0, 0, h);
+          grad.addColorStop(0, '#3a3d3b');
+          grad.addColorStop(0.5, '#252726');
+          grad.addColorStop(1, '#121313');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+
+          // Huge bold white title behind speaker's head
+          if (behindTitle) {
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '800 54px "Syne", sans-serif';
+            const lines = behindTitle.split('\n');
+            lines.forEach((line, idx) => {
+              ctx.fillText(line, 180, 145 + idx * 54);
+            });
+          }
+
+          // Maroon collared shirt torso
+          ctx.fillStyle = '#5c1624';
+          ctx.beginPath();
+          ctx.ellipse(180, 470, 138, 160, 0, Math.PI, 0);
+          ctx.fill();
+          ctx.fillRect(42, 465, 276, 180);
+
+          // Head & beard
+          ctx.fillStyle = '#d99b78';
+          ctx.beginPath();
+          ctx.arc(180, 240, 48, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#1c1817';
+          ctx.beginPath();
+          ctx.arc(180, 254, 46, 0.2, Math.PI - 0.2);
+          ctx.fill();
+
+          // Hair
+          ctx.fillStyle = '#141212';
+          ctx.beginPath();
+          ctx.arc(180, 204, 49, Math.PI, 0);
+          ctx.fill();
+
+          // Clear frame glasses
+          ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+          ctx.lineWidth = 2.5;
+          fillRoundRect(ctx, 142, 222, 32, 22, 5, null, 'rgba(255,255,255,0.85)');
+          fillRoundRect(ctx, 186, 222, 32, 22, 5, null, 'rgba(255,255,255,0.85)');
+          ctx.beginPath();
+          ctx.moveTo(174, 231);
+          ctx.lineTo(186, 231);
+          ctx.stroke();
+
+          // Center studio microphone
+          fillRoundRect(ctx, 158, 345, 44, 92, 16, '#141619', '#2d3138');
+
+          if (frontCaption) {
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '700 24px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText(frontCaption, 180, 340);
+          }
+        };
+
+        if (t < 2.0) {
+          // 00:00 - 00:02: "GRAPHIC DESIGNERS - This one is for you"
+          drawMaroonCreator('GRAPHIC\nDESIGNERS', 'This one is for you');
+        } else if (t < 5.2) {
+          // 00:02 - 00:05.2: White Phone UI Card with "Stop!!!" red button & "2026"
+          if (t < 3.6) {
+            ctx.fillStyle = '#2b1b1e';
+            ctx.fillRect(0, 0, w, h);
+            fillRoundRect(ctx, 32, 65, 296, 500, 28, '#ffffff');
+            fillRoundRect(ctx, 48, 125, 264, 240, 14, '#e9d8be');
+            ctx.fillStyle = '#5c4732';
+            ctx.textAlign = 'left';
+            ctx.font = '700 18px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('Happy Labour Day', 64, 255);
+            // Red Stop button
+            fillRoundRect(ctx, 98, 495, 164, 42, 12, '#e11d48');
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.font = '700 18px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('Stop!!!', 180, 522);
+          } else {
+            drawMaroonCreator('2026', 'Stop static images');
+          }
+        } else if (t < 11.0) {
+          // 00:05.2 - 00:11: Pink Ad Design Showcase + "Add Motion" interactive pill
+          const g = ctx.createLinearGradient(0, 0, w, h);
+          g.addColorStop(0, '#ec4899');
+          g.addColorStop(1, '#831843');
+          ctx.fillStyle = g;
+          ctx.fillRect(0, 0, w, h);
+
+          fillRoundRect(ctx, 42, 130, 276, 300, 22, '#ffffff');
+          ctx.fillStyle = '#be185d';
+          ctx.font = '800 22px "Syne", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('DYNAMIC MOTION AD', 180, 195);
+
+          // Pan graphic
+          ctx.fillStyle = '#1f2937';
+          ctx.beginPath();
+          ctx.arc(180, 295, 62, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#ea580c';
+          ctx.beginPath();
+          ctx.arc(180, 295, 48, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Glossy "Add Motion" button
+          fillRoundRect(ctx, 72, 465, 216, 52, 16, '#18181b', '#f472b6');
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '700 22px "Plus Jakarta Sans", sans-serif';
+          ctx.fillText('Add Motion ✦', 180, 498);
+        } else if (t < 15.0) {
+          // 00:11 - 00:15: Neon yellow-green Kittl AI prompt box "Make Commercials for my brand"
+          const g = ctx.createRadialGradient(180, 320, 30, 180, 320, 320);
+          g.addColorStop(0, '#f7fee7');
+          g.addColorStop(1, '#d9f99d');
+          ctx.fillStyle = g;
+          ctx.fillRect(0, 0, w, h);
+
+          ctx.fillStyle = '#111827';
+          ctx.textAlign = 'center';
+          ctx.font = '800 42px "Syne", sans-serif';
+          ctx.fillText('Kittl AI', 180, 210);
+
+          fillRoundRect(ctx, 36, 265, 288, 110, 18, '#1e1f24');
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'left';
+          ctx.font = '500 18px "Plus Jakarta Sans", sans-serif';
+          ctx.fillText('Make Commercials', 60, 308);
+          ctx.fillText('for my brand|', 60, 334);
+        } else if (t < 18.5) {
+          // 00:15 - 00:18.5: Vintage Green BMW / Coffee Cup / Diamond Pendant Mockups
+          ctx.fillStyle = '#f8f7f0';
+          ctx.fillRect(0, 0, w, h);
+          ctx.textAlign = 'left';
+          ctx.fillStyle = '#1f3a1d';
+          ctx.font = '700 13px "Plus Jakarta Sans", sans-serif';
+          ctx.fillText('THE PRODUCT IS JUST', 36, 175);
+          ctx.font = '800 32px "Syne", sans-serif';
+          ctx.fillText('THE VEHICLE.', 36, 212);
+
+          // Green car silhouette
+          fillRoundRect(ctx, 110, 275, 230, 88, 18, '#365314');
+          ctx.fillStyle = '#111827';
+          ctx.beginPath();
+          ctx.arc(175, 365, 28, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (t < 31.0) {
+          // 00:18.5 - 00:31: Kittl + Veo 3.0-Fast Generation UI
+          const g = ctx.createRadialGradient(180, 320, 30, 180, 320, 320);
+          g.addColorStop(0, '#fefce8');
+          g.addColorStop(1, '#d4ff00');
+          ctx.fillStyle = g;
+          ctx.fillRect(0, 0, w, h);
+
+          fillRoundRect(ctx, 30, 210, 300, 115, 18, '#1f2026');
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'left';
+          ctx.font = '600 16px "Plus Jakarta Sans", sans-serif';
+          ctx.fillText('Make jewellery Commercial', 48, 255);
+          fillRoundRect(ctx, 222, 275, 92, 34, 10, '#d4ff00');
+          ctx.fillStyle = '#09090b';
+          ctx.textAlign = 'center';
+          ctx.font = '700 14px "Plus Jakarta Sans", sans-serif';
+          ctx.fillText('Generate', 268, 297);
+
+          // Veo 3.0-Fast badge
+          fillRoundRect(ctx, 30, 342, 300, 74, 18, '#1f2026');
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'left';
+          ctx.font = '700 20px "Plus Jakarta Sans", sans-serif';
+          ctx.fillText('✦ Veo 3.0-Fast', 56, 376);
+          ctx.font = '400 12px "Plus Jakarta Sans", sans-serif';
+          ctx.fillStyle = '#9ca3af';
+          ctx.fillText('Fast high-fidelity video generation', 56, 396);
+        } else if (t < 36.8) {
+          // 00:31 - 00:36.8: Luxury Gold & Diamond Jewelry on Deep Burgundy Velvet & Red Stone
+          const g = ctx.createRadialGradient(180, 300, 20, 180, 320, 340);
+          g.addColorStop(0, '#5c111b');
+          g.addColorStop(1, '#1f0408');
+          ctx.fillStyle = g;
+          ctx.fillRect(0, 0, w, h);
+
+          // Shimmering rotating gold ring & diamond pendant
+          const angle = t * 1.4;
+          ctx.save();
+          ctx.translate(180, 310);
+          ctx.strokeStyle = '#fbbf24';
+          ctx.lineWidth = 12;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, 78, 98, Math.sin(angle) * 0.25, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Inner diamond cluster glow
+          ctx.fillStyle = '#fef3c7';
+          ctx.beginPath();
+          ctx.arc(0, 18, 24, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+
+          ctx.textAlign = 'center';
+          ctx.fillStyle = '#fde68a';
+          ctx.font = '700 16px "JetBrains Mono", monospace';
+          ctx.fillText('AI SCROLL-STOPPING MOTION', 180, 505);
+        } else {
+          // 00:36.8 - 00:41.5: Outro CTA "just comment 'move' and I'll send you"
+          drawMaroonCreator('', 'just comment "move"');
+        }
+      };
+
+      // Play/Pause button logic
+      toggleButtons.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = parseInt(btn.getAttribute('data-reel-index') || '0', 10);
+          const state = reelStates[idx];
+          const video = videoElements[idx];
+          const playIcon = btn.querySelector('.play-icon');
+          const pauseIcon = btn.querySelector('.pause-icon');
+
+          state.playing = !state.playing;
+
+          if (state.playing) {
+            playIcon.classList.add('hidden');
+            pauseIcon.classList.remove('hidden');
+            if (video && state.hasNativeVideo) video.play().catch(() => {});
+          } else {
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+            if (video && state.hasNativeVideo) video.pause();
+          }
+        });
+      });
+
+      // Sound toggle logic
+      soundButtons.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const vidId = btn.getAttribute('data-video-id');
+          const video = document.getElementById(vidId);
+          if (!video) return;
+
+          video.muted = !video.muted;
+          if (!video.muted) {
+            video.play().catch(() => {});
+          }
+          const onIcon = btn.querySelector('.sound-on-icon');
+          const offIcon = btn.querySelector('.sound-off-icon');
+
+          if (video.muted) {
+            onIcon.classList.add('hidden');
+            offIcon.classList.remove('hidden');
+          } else {
+            onIcon.classList.remove('hidden');
+            offIcon.classList.add('hidden');
+          }
+        });
+      });
+
+      // Interactive progress bar scrubbing on each reel card
+      progressTracks.forEach((track) => {
+        track.addEventListener('click', (e) => {
+          const idx = parseInt(track.getAttribute('data-reel-index') || '0', 10);
+          const rect = track.getBoundingClientRect();
+          const ratio = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+          const state = reelStates[idx];
+          state.currentTime = ratio * state.duration;
+          const video = videoElements[idx];
+          if (video && state.hasNativeVideo && video.duration) {
+            video.currentTime = ratio * video.duration;
+          }
+        });
+      });
+
+      // Direct file picker helper: lets you link the MP4 file instantly from your computer with full audio
+      localPickers.forEach((picker) => {
+        picker.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const idx = parseInt(picker.getAttribute('data-reel-index') || '0', 10);
+          const video = videoElements[idx];
+          if (!video) return;
+
+          const fileUrl = URL.createObjectURL(file);
+          video.src = fileUrl;
+          video.muted = false;
+          video.classList.remove('opacity-0');
+          reelStates[idx].hasNativeVideo = true;
+          reelStates[idx].playing = true;
+          video.load();
+          video.play().catch(() => {});
+
+          // Update sound icon to unmuted
+          const card = video.closest('article');
+          if (card) {
+            const onIcon = card.querySelector('.sound-on-icon');
+            const offIcon = card.querySelector('.sound-off-icon');
+            if (onIcon && offIcon) {
+              onIcon.classList.remove('hidden');
+              offIcon.classList.add('hidden');
+            }
+          }
+        });
+      });
+
+      // Sound toggle logic
+      soundButtons.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const vidId = btn.getAttribute('data-video-id');
+          const video = document.getElementById(vidId);
+          if (!video) return;
+
+          video.muted = !video.muted;
+          const onIcon = btn.querySelector('.sound-on-icon');
+          const offIcon = btn.querySelector('.sound-off-icon');
+
+          if (video.muted) {
+            onIcon.classList.add('hidden');
+            offIcon.classList.remove('hidden');
+          } else {
+            onIcon.classList.remove('hidden');
+            offIcon.classList.add('hidden');
+          }
+        });
+      });
+
+      // Direct file picker helper: lets you link the MP4 file instantly from your computer
+      localPickers.forEach((picker) => {
+        picker.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const vidId = picker.getAttribute('data-video-id');
+          const video = document.getElementById(vidId);
+          if (!video) return;
+
+          const fileUrl = URL.createObjectURL(file);
+          video.src = fileUrl;
+          video.load();
+          video.play().catch(() => {});
+        });
+      });
+
+      // Time update on cards
+      videoElements.forEach((vid) => {
+        if (!vid) return;
+        vid.addEventListener('timeupdate', () => {
+          const card = vid.closest('article');
+          const timeLabel = card.querySelector('.video-time-label');
+          if (timeLabel && vid.duration) {
+            const formatSec = (s) => {
+              const m = Math.floor(s / 60);
+              const sec = Math.floor(s % 60);
+              return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+            };
+            timeLabel.textContent = `${formatSec(vid.currentTime)} / ${formatSec(vid.duration)}`;
+          }
+        });
+      });
+
+      // NLE Scrubber Interaction
+      const nleArea = document.getElementById('nle-timeline-area');
+      const nlePlayhead = document.getElementById('nle-playhead');
+      const nleTimecode = document.getElementById('nle-timecode');
+      const nlePlayBtn = document.getElementById('nle-play-btn');
+      let isDraggingScrubber = false;
+      let globalTimelineTime = 0;
+      let isTimelinePlaying = true;
+
+      const setScrubPosition = (clientX) => {
+        if (!nleArea) return;
+        const rect = nleArea.getBoundingClientRect();
+        const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+        nlePlayhead.style.left = `${(ratio * 100).toFixed(1)}%`;
+        globalTimelineTime = ratio * 40; // 40 second master timeline
+        if (nleTimecode) {
+          nleTimecode.textContent = formatTimecode(globalTimelineTime * 24);
+        }
+      };
+
+      if (nleArea) {
+        nleArea.addEventListener('mousedown', (e) => {
+          isDraggingScrubber = true;
+          setScrubPosition(e.clientX);
+        });
+        window.addEventListener('mousemove', (e) => {
+          if (isDraggingScrubber) setScrubPosition(e.clientX);
+        });
+        window.addEventListener('mouseup', () => {
+          isDraggingScrubber = false;
+        });
+        nleArea.addEventListener('touchstart', (e) => {
+          if (e.touches[0]) setScrubPosition(e.touches[0].clientX);
+        }, { passive: true });
+        nleArea.addEventListener('touchmove', (e) => {
+          if (e.touches[0]) setScrubPosition(e.touches[0].clientX);
+        }, { passive: true });
+      }
+
+      if (nlePlayBtn) {
+        nlePlayBtn.addEventListener('click', () => {
+          isTimelinePlaying = !isTimelinePlaying;
+        });
+      }
+
+      /* -------------------------------------------------------------------
+         5. MASTER 60FPS ANIMATION LOOP
+         ------------------------------------------------------------------- */
+      const animateLoop = () => {
+        // Spring interpolation for custom cursor reticle, ghost ring & HUD
+        reticleX += (mouseX - reticleX) * 0.24;
+        reticleY += (mouseY - reticleY) * 0.24;
+        ghostX += (mouseX - ghostX) * 0.11;
+        ghostY += (mouseY - ghostY) * 0.11;
+        hudX += (mouseX - hudX) * 0.18;
+        hudY += (mouseY - hudY) * 0.18;
+
+        cursorReticle.style.transform = `translate3d(${reticleX.toFixed(1)}px, ${reticleY.toFixed(1)}px, 0)`;
+        cursorGhost.style.transform = `translate3d(${ghostX.toFixed(1)}px, ${ghostY.toFixed(1)}px, 0)`;
+        cursorHud.style.left = `${hudX.toFixed(1)}px`;
+        cursorHud.style.top = `${hudY.toFixed(1)}px`;
+        cursorActionPill.style.left = `${reticleX.toFixed(1)}px`;
+        cursorActionPill.style.top = `${reticleY.toFixed(1)}px`;
+
+        // Advance live 24fps timecode (speeds up when scrolling!)
+        totalFrames += 0.4 + scrollVelocityBoost;
+        scrollVelocityBoost *= 0.9;
+        const formattedTC = formatTimecode(totalFrames);
+        if (cursorTimecodeEl) cursorTimecodeEl.textContent = formattedTC;
+        if (heroClockEl) heroClockEl.textContent = `TC ${formattedTC}`;
+
+        // Update 3D page scroll transforms
+        updatePageScrollTransforms();
+
+        // Advance & render both Client Viral Hook Reels (60fps canvas + native video sync)
+        reelStates.forEach((state, idx) => {
+          const video = videoElements[idx];
+          const canvas = canvasElements[idx];
+          const progressFill = document.getElementById(state.progressId);
+          const timeLabel = document.getElementById(state.timeId);
+
+          if (state.hasNativeVideo && video && !video.paused && video.duration) {
+            state.currentTime = video.currentTime;
+            state.duration = video.duration;
+          } else if (state.playing) {
+            state.currentTime = (state.currentTime + 1 / 60) % state.duration;
+          }
+
+          if (canvas && !state.hasNativeVideo) {
+            const ctx = canvas.getContext('2d');
+            if (idx === 0) {
+              renderClientReel1(ctx, state.currentTime);
+            } else {
+              renderClientReel2(ctx, state.currentTime);
+            }
+          }
+
+          if (progressFill) {
+            const pct = ((state.currentTime / state.duration) * 100).toFixed(1);
+            progressFill.style.width = `${pct}%`;
+          }
+          if (timeLabel) {
+            timeLabel.textContent = `${formatSec(state.currentTime)} / ${formatSec(state.duration)}`;
+          }
+        });
+
+        // Advance NLE scrubber timeline
+        if (isTimelinePlaying && !isDraggingScrubber) {
+          globalTimelineTime = (globalTimelineTime + 0.016) % 21;
+          const ratio = globalTimelineTime / 21;
+          if (nlePlayhead) nlePlayhead.style.left = `${(ratio * 100).toFixed(2)}%`;
+          if (nleTimecode) nleTimecode.textContent = formatTimecode(globalTimelineTime * 24);
+        }
+
+        requestAnimationFrame(animateLoop);
+      };
+
+      animateLoop();
+
+      /* -------------------------------------------------------------------
+         6. CLIPBOARD EMAIL COPY & QUICK BRIEF FORM
+         ------------------------------------------------------------------- */
+      const copyEmailBtn = document.getElementById('copy-email-btn');
+      const emailText = document.getElementById('email-text');
+      if (copyEmailBtn && emailText) {
+        copyEmailBtn.addEventListener('click', () => {
+          const email = copyEmailBtn.getAttribute('data-email');
+          const tempInput = document.createElement('textarea');
+          tempInput.value = email;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+
+          const original = emailText.textContent;
+          emailText.textContent = '✓ Copied to Clipboard!';
+          setTimeout(() => {
+            emailText.textContent = original;
+          }, 2200);
+        });
+      }
+
+      const briefForm = document.getElementById('brief-form');
+      const briefToast = document.getElementById('brief-toast');
+      const briefToastMsg = document.getElementById('brief-toast-msg');
+      const briefSubmitBtn = document.getElementById('brief-submit-btn');
+      const briefGmailLink = document.getElementById('brief-gmail-link');
+      const briefMailtoLink = document.getElementById('brief-mailto-link');
+
+      if (briefForm && briefToast) {
+        briefForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          const clientName = document.getElementById('brief-name')?.value.trim() || 'Client';
+          const clientContact = document.getElementById('brief-contact')?.value.trim() || 'Not provided';
+          const projectType = document.getElementById('brief-type')?.value || 'Video Project';
+          const projectDetails = document.getElementById('brief-details')?.value.trim() || '';
+
+          const subject = encodeURIComponent(`New Project Brief from ${clientName} — ${projectType}`);
+          const bodyText =
+            `Hi Yuvraj,\n\n` +
+            `You have received a new project brief from your portfolio website:\n\n` +
+            `• Client / Brand: ${clientName}\n` +
+            `• Client Contact: ${clientContact}\n` +
+            `• Project Type: ${projectType}\n` +
+            `• Project Details:\n${projectDetails}\n\n` +
+            `— Sent via Portfolio Quick Project Brief`;
+          const bodyEncoded = encodeURIComponent(bodyText);
+
+          // Set direct fallback links for Gmail Web & native Email Client
+          const mailtoUrl = `mailto:yacharya529@gamil.com?cc=yacharya529@gmail.com&subject=${subject}&body=${bodyEncoded}`;
+          const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=yacharya529@gamil.com&cc=yacharya529@gmail.com&su=${subject}&body=${bodyEncoded}`;
+
+          if (briefMailtoLink) briefMailtoLink.href = mailtoUrl;
+          if (briefGmailLink) briefGmailLink.href = gmailUrl;
+
+          if (briefSubmitBtn) {
+            briefSubmitBtn.textContent = 'Sending Brief to Inbox...';
+            briefSubmitBtn.disabled = true;
+          }
+
+          try {
+            // 1. Send directly via FormSubmit AJAX to inbox
+            await fetch('https://formsubmit.co/ajax/yacharya529@gmail.com', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify({
+                _subject: `New Portfolio Brief: ${clientName} (${projectType})`,
+                Client_Name_Or_Brand: clientName,
+                Client_Contact_Info: clientContact,
+                Project_Type: projectType,
+                Project_Details: projectDetails
+              })
+            });
+          } catch (err) {
+            // Fallback handled below via direct mail client launch
+          }
+
+          // 2. Also trigger the pre-filled email client so the message lands immediately
+          window.location.href = mailtoUrl;
+
+          if (briefSubmitBtn) {
+            briefSubmitBtn.textContent = 'Send Project Brief →';
+            briefSubmitBtn.disabled = false;
+          }
+
+          if (briefToastMsg) {
+            briefToastMsg.textContent = `✓ Brief from "${clientName}" prepared & sent to your email!`;
+          }
+          briefToast.classList.remove('hidden');
+          briefForm.reset();
+        });
+      }
+    };
+  </script>
+</body>
+</html>
